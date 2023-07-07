@@ -5,14 +5,17 @@
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "migrate:scanner-store": "dotenv -- yarn workspace scanner-store migrate "
+    "migrate:scanner-store": "dotenv -- yarn workspace scanner-store migrate",
+    "migrate:test_scanner-store": "dotenv -e .env.test -- yarn workspace scanner-store db:push"
   },
   "devDependencies": {
     "@turbo/gen": "^1.9.7",
+    "@types/jest": "^29.5.2",
     "dotenv": "^16.3.1",
     "dotenv-cli": "^7.2.1",
     "eslint": "^7.32.0",
     "eslint-config-custom": "*",
+    "jest": "^29.6.1",
     "prettier": "^2.5.1",
     "ts-node": "^10.9.1",
     "tsc": "^2.0.4",
