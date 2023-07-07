@@ -1,0 +1,146 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model NFTCollection {
+  // Complete address of the NFT collection in format "A.{0x8...2b}.{name}"
+  address String @id
+
+  // Collection storage path
+  storagePath String
+
+  // Collection public path
+  publicPath String
+
+  NFTCollectionOnStoreFronts NFTCollectionOnStoreFronts[]
+}
+
+model StoreFront {
+  version                       Int
+  address                       String                          @id
+  storagePath                   String
+  publicPath                    String
+  NFTCollectionOnStoreFronts    NFTCollectionOnStoreFronts[]
+  ListingAvailableOnStoreFronts ListingAvailableOnStoreFronts[]
+  ListingCompletedOnStoreFront  ListingCompletedOnStoreFront[]
+}
+
+model NFTCollectionOnStoreFronts {
+  storeFront      StoreFront    @relation(fields: [storFrontId], references: [address])
+  storFrontId     String
+  nftCollection   NFTCollection @relation(fields: [nftCollectionId], references: [address])
+  nftCollectionId String
+
+  @@id([storFrontId, nftCollectionId])
+}
+
+model ListingAvailable {
+  // Complete address of the NFT collection in format "A.{0x8...2b}.{name}"
+  collection        String
+  nftId             Int
+  storeFrontAddress String
+
+  listingResourceId Int @id
+
+  nftUUID Int
+
+  salePrice             Float
+  expiry                Int
+  salePayementVaultType String
+  blockHeight Int
+  transactionId String
+
+  commisionAmount Float
+
+  // Timestamp of event emitted
+  timestamp Int
+
+  ListingAvailableOnStoreFronts ListingAvailableOnStoreFronts[]
+}
+
+model ListingAvailableOnStoreFronts {
+  listingAvailable   ListingAvailable @relation(fields: [listingAvailableId], references: [listingResourceId])
+  listingAvailableId Int
+  storeFront         StoreFront       @relation(fields: [storeFrontId], references: [address])
+  storeFrontId       String
+
+  @@id([listingAvailableId, storeFrontId])
+}
+
+model ListingCompleted {
+  // Complete address of the NFT collection in format "A.{0x8...2b}.{name}"
+  collection        String
+  nftId             Int
+  storeFrontAddress String
+
+  purchased Boolean
+
+  listingResourceId Int @id
+
+  nftUUID Int
+
+  salePrice             Float
+  expiry                Int
+  salePayementVaultType String
+
+  blockHeight Int
+  transactionId String
+
+  commisionAmount Float
+
+  // Timestamp of event emitted
+  timestamp Int
+
+  ListingCompletedOnStoreFront ListingCompletedOnStoreFront[]
+}
+
+model ListingCompletedOnStoreFront {
+  listingCompleted   ListingCompleted @relation(fields: [listingCompletedId], references: [listingResourceId])
+  listingCompletedId Int
+  storeFront         StoreFront       @relation(fields: [storeFrontId], references: [address])
+  storeFrontId       String
+
+  @@id([listingCompletedId, storeFrontId])
+}
+
+
+model NFTWithdraw {
+  
+  collection String
+  nftId Int
+  benf String
+  timestamp Int
+
+  blockHeight Int
+  transactionId String
+
+  @@id([collection, nftId, benf, transactionId])
+
+}
+
+
+model NFTDeposit {
+  collection String
+  nftId Int
+  benf String
+  timestamp Int
+
+  blockHeight Int
+  transactionId String
+
+  @@id([collection, nftId, benf, transactionId])
+}
+
+model StoreScannerConfig {
+  scannerId String @id
+  blockHeight String
+  
+}
