@@ -18,6 +18,7 @@
   "scripts": {
     "migrate": "prisma migrate dev",
     "test": "jest",
-    "db:push": "prisma db push"
+    "db:push": "prisma db push",
+    "clean": "ts-node ./cleanup.ts"
   }
 }

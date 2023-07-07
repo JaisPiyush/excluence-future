@@ -11,7 +11,7 @@ let nftCollectionService: NFTCollectionService;
 let storeFrontService: StoreFrontService
 const storeFront: CreateStoreFrontDto = {
     version: 2,
-    address: '0x02',
+    address: '0x01',
     publicPath: 'NFTStoreFrontV2PublicPath',
     storagePath: 'NFTStoreFrontV2StoragePath'
 }
@@ -26,10 +26,10 @@ beforeEach(async () => {
 describe('Testing NFTCollectionService', () => { 
     test('should create NFTCollection and NFTCollectionOnStoreFronts', async () => {
         const nftCollectionDto: CreateNFTCollectionDto = {
-            address: 'A.0x02.AllDay',
+            address: 'A.0x03.AllDay',
             publicPath: 'AllDayPublicPath',
             storagePath: 'AllDayStoragePath',
-            storeFrontAddress: '0x02'
+            storeFrontAddress: '0x01'
         }
 
         const nftCollection = await nftCollectionService.createNFTCollection(nftCollectionDto);
@@ -42,10 +42,19 @@ describe('Testing NFTCollectionService', () => {
         expect(nFTCollectionOnStoreFronts?.nftCollectionId).toEqual(nftCollection.address)
         expect(nFTCollectionOnStoreFronts?.storFrontId).toEqual(storeFront.address);
 
+    });
+
+    test('should return nftCollection', async () => {
+        expect(await nftCollectionService.getNFTCollectionByAddress('A.0x03.AllDay')).not.toBe(null)
     })
 })
 
 afterAll(async () => {
-    nftCollectionService.prisma.nFTCollection.deleteMany();
-    nftCollectionService.prisma.nFTCollectionOnStoreFronts.deleteMany();
+    await nftCollectionService.prisma.$transaction([
+        nftCollectionService.prisma.nFTCollection.deleteMany(),
+        nftCollectionService.prisma.nFTCollectionOnStoreFronts.deleteMany(),
+        storeFrontService.prisma.storeFront.deleteMany()
+    ]);
+
+    await nftCollectionService.prisma.$disconnect()
 })

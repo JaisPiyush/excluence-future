@@ -30,13 +30,9 @@ export class NFTCollectionService {
 
     // Get NFTCollection using address
     async getNFTCollectionByAddress(address: string) {
-        return await this.prisma.nFTCollectionOnStoreFronts.findFirst({
+        return await this.prisma.nFTCollection.findFirst({
             where: {
-                nftCollectionId: address
-            },
-            include: {
-                nftCollection: true,
-                storeFront: false
+                address: address
             }
         });
     }
