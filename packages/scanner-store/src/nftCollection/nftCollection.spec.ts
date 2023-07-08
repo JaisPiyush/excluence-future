@@ -16,7 +16,7 @@ const storeFront: CreateStoreFrontDto = {
     storagePath: 'NFTStoreFrontV2StoragePath'
 }
 
-beforeEach(async () => {
+beforeAll(async () => {
     nftCollectionService = new NFTCollectionService(new PrismaClient());
     storeFrontService = new StoreFrontService(nftCollectionService.prisma);
     await storeFrontService.createStoreFront(storeFront);
@@ -51,8 +51,8 @@ describe('Testing NFTCollectionService', () => {
 
 afterAll(async () => {
     await nftCollectionService.prisma.$transaction([
-        nftCollectionService.prisma.nFTCollection.deleteMany(),
         nftCollectionService.prisma.nFTCollectionOnStoreFronts.deleteMany(),
+        nftCollectionService.prisma.nFTCollection.deleteMany(),
         storeFrontService.prisma.storeFront.deleteMany()
     ]);
 
