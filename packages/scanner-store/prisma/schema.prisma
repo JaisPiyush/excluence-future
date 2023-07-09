@@ -54,11 +54,11 @@ model ListingAvailable {
 
   salePrice             Float
   expiry                Int
-  salePayementVaultType String
+  salePaymentVaultType String
   blockHeight Int
   transactionId String
 
-  commisionAmount Float
+  commissionAmount Float
 
   // Timestamp of event emitted
   timestamp Int
