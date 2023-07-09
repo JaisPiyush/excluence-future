@@ -8,7 +8,8 @@
     "migrate:scanner-store": "dotenv -- yarn workspace scanner-store migrate",
     "migrate:test_scanner-store": "dotenv -e .env.test -- yarn workspace scanner-store migrate",
     "test_run:scanner-store": "dotenv -e .env.test -- yarn workspace scanner-store run",
-    "test:scanner-store": "dotenv -e .env.test -- yarn workspace scanner-store run test"
+    "test:scanner-store": "dotenv -e .env.test -- yarn workspace scanner-store run test",
+    "run:scanner": "dotenv  -- yarn workspace store-scanner run start"
   },
   "devDependencies": {
     "@turbo/gen": "^1.9.7",

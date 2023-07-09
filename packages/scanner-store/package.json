@@ -1,7 +1,8 @@
 {
   "name": "scanner-store",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
   "author": "Piyush Jaiswal",
   "license": "MIT",
   "devDependencies": {

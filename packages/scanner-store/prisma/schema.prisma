@@ -28,6 +28,7 @@ model StoreFront {
   address                       String                          @id
   storagePath                   String
   publicPath                    String
+  startBlockHeight              Int @default(0)
   NFTCollectionOnStoreFronts    NFTCollectionOnStoreFronts[]
   ListingAvailableOnStoreFronts ListingAvailableOnStoreFronts[]
   ListingCompletedOnStoreFront  ListingCompletedOnStoreFront[]
