@@ -7,10 +7,7 @@ export class StoreFrontService {
     async createStoreFront(args: CreateStoreFrontDto) {
         return await this.prisma.storeFront.create({
             data: {
-                version: args.version,
-                address: args.address,
-                storagePath: args.storagePath,
-                publicPath: args.publicPath
+                ...args
             }
         })
     }

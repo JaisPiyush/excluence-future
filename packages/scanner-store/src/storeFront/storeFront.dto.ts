@@ -3,4 +3,5 @@ export interface CreateStoreFrontDto {
     address: string
     storagePath: string;
     publicPath: string;
+    startBlockHeight: number;
 }
