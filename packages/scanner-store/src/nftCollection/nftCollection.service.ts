@@ -15,9 +15,9 @@ export class NFTCollectionService {
                 NFTCollectionOnStoreFronts: {
                     create: [
                         {
-                            storeFront: {
+                            store: {
                                 connect: {
-                                    address: args.storeFrontAddress
+                                    address: args.storeAddress
                                 }
                             }
 
@@ -38,26 +38,26 @@ export class NFTCollectionService {
     }
 
     // Get NFTCollections using StoreFront address
-    async getNFTCollectionsByStoreFront(storeFrontAddress: string) {
+    async getNFTCollectionsByStore(storeFrontAddress: string) {
         return await this.prisma.nFTCollectionOnStoreFronts.findMany({
             where: {
-                storFrontId: storeFrontAddress
+                storId: storeFrontAddress
             },
             include: {
                 nftCollection: true,
-                storeFront: false
+                store: false
             }
         })
     }
 
     // Get All StoreFronts using NFTCollection address
-    async getStoreFrontsByNFTCollection(address: string) {
+    async getStoresByNFTCollection(address: string) {
         return await this.prisma.nFTCollectionOnStoreFronts.findMany({
             where: {
                 nftCollectionId: address
             },
             include: {
-                storeFront: true,
+                store: true,
                 nftCollection: false
             }
         })

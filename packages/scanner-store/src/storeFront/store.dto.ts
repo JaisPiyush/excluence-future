@@ -1,4 +1,4 @@
-export interface CreateStoreFrontDto {
+export interface CreateStoreDto {
     version: number
     address: string
     storagePath: string;

@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client'
 import { NFTCollectionService } from './src/nftCollection/nftCollection.service'
-import { StoreFrontService } from './src/storeFront/storeFront.service';
+import { StoreFrontService } from './src/storeFront/store.service';
 
 // Cleanup db in test env
 async function main() {

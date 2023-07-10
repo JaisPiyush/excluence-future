@@ -10,6 +10,7 @@
     "tsconfig": "*"
   },
   "dependencies": {
+    "@onflow/fcl": "^1.4.1",
     "@types/ioredis": "^5.0.0",
     "@types/lodash": "^4.14.195",
     "@types/qs": "^6.9.7",

@@ -6,10 +6,13 @@ import { FlowAccessNode, flowNetworkConfigs } from '../config'
 import { getPrismaClient } from 'scanner-store'
 import { PrismaDBSettingService } from './db-settings-service'
 import {MemorySettingsService} from '@rayvin-flow/flow-scanner-lib/lib/settings/memory-settings-service'
+import { getEvents } from './events'
+import { logger } from './logger';
+import { Logger } from 'logger'
 
 // create provider for configuration 
 const configProvider: ConfigProvider = () => ({
-    defaultStartBlockHeight: 56324984, // this is the block height that the scanner will start from on the very first run
+    defaultStartBlockHeight: 56381377, // this is the block height that the scanner will start from on the very first run
     flowAccessNode: flowNetworkConfigs[FlowAccessNode.Mainnet],
     maxFlowRequestsPerSecond: 10
 })
@@ -28,9 +31,7 @@ const eventBroadcaster = new ExtendedConsoleEventBroadcaster();
 
 const flowScanner = new FlowScanner(
     // event types to monitor
-    [
-        'A.4eb8a10cb9f87357.NFTStorefrontV2.ListingAvailable',
-    ],
+    getEvents(),
     // pass in the configured providers
     {
         configProvider: configProvider,
@@ -51,18 +52,18 @@ export const main = async () => {
     await new Promise<void>(resolve => {
         // listen for SIGTERM to stop the scanner
         process.on('SIGTERM', () => {
-            console.log('Received SIGTERM')
+            Logger.info('Received SIGTERM')
             resolve()
         })
 
         process.on('SIGINT', () => {
-            console.log('Received SIGINT')
+            Logger.info('Received SIGINT')
             resolve()
         })
     })
 
     // when you are ready to stop the scanner, you can call the stop() method
-    console.log('Stopping scanner')
+    Logger.info('Stopping scanner')
     await flowScanner.stop()
 }
 

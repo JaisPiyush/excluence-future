@@ -1,5 +1,5 @@
 export interface CreateNFTCollectionDto {
-    storeFrontAddress: string;
+    storeAddress: string;
     address: string;
     storagePath: string;
     publicPath: string;

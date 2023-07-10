@@ -1,0 +1,24 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "main": "src/index.ts",
+  "author": "Piyush Jaiswal",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/hapi__hapi": "^21.0.0",
+    "nodemon": "^3.0.1",
+    "tsconfig": "*"
+  },
+  "dependencies": {
+    "@hapi/hapi": "^21.3.2",
+    "joi": "^17.9.2",
+    "logger": "*",
+    "qs": "^6.11.2",
+    "scanner-store": "*",
+    "steward": "*"
+  },
+  "scripts": {
+    "run": "ts-node src/index.ts",
+    "dev": "nodemon"
+  }
+}

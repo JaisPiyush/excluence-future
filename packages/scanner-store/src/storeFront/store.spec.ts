@@ -1,5 +1,5 @@
-import { StoreFrontService } from './storeFront.service';
-import { CreateStoreFrontDto } from './storeFront.dto';
+import { StoreFrontService } from './store.service';
+import { CreateStoreDto } from './store.dto';
 import { PrismaClient } from '@prisma/client';
 
 let storeFrontService: StoreFrontService;
@@ -10,7 +10,7 @@ beforeEach(() => {
 
 describe('StoreFront testing', () => { 
     test('should create a new store front', async () => {
-        const storeFrontDto: CreateStoreFrontDto = {
+        const storeFrontDto: CreateStoreDto = {
             version: 2,
             address: '0x02',
             publicPath: 'NFTStoreV2PublicPath',

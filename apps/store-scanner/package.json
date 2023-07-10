@@ -11,7 +11,8 @@
   "dependencies": {
     "@rayvin-flow/flow-scanner-lib": "^1.0.1",
     "steward": "*",
-    "scanner-store": "*"
+    "scanner-store": "*",
+    "logger": "*"
   },
   "scripts": {
     "start": "ts-node src/index.ts"

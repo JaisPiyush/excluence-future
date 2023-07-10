@@ -20,8 +20,10 @@ export const defaultWorker = (queueName: string) => {
             if (isEmpty(instance)) {
                 throw new Error(`Unable to find Job: ${job.data.name}`);
             }
-            instance.handle();
-            return {status: 200, message: "success"}
+            return instance.handle().then(() => {
+                return {status: 200, message: "success"}
+            });
+            
         },
         {
             concurrency,
@@ -30,9 +32,10 @@ export const defaultWorker = (queueName: string) => {
     );
 
 
-    worker.on("failed", (job: Job) => {
+    worker.on("failed", (job: any, 
+                        _err: Error, prev: string) => {
         const instance = getJobInstance(job.data);
-        instance?.failed(job);
+        instance?.failed(job).then(() => {});
         Logger.info(`${job.id} has failed`);
     })
 }

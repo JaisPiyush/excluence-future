@@ -1,25 +1,26 @@
 
 import { PrismaClient } from '@prisma/client';
 import { NFTCollectionService } from './nftCollection.service';
-import { StoreFrontService } from '../storeFront/storeFront.service';
+import { StoreFrontService } from '../storeFront/store.service';
 import { CreateNFTCollectionDto } from './nftCollection.dto';
-import { CreateStoreFrontDto } from '../storeFront/storeFront.dto';
+import { CreateStoreDto } from '../storeFront/store.dto';
 
 
 
 let nftCollectionService: NFTCollectionService;
 let storeFrontService: StoreFrontService
-const storeFront: CreateStoreFrontDto = {
+const store: CreateStoreDto = {
     version: 2,
     address: '0x01',
     publicPath: 'NFTStoreFrontV2PublicPath',
-    storagePath: 'NFTStoreFrontV2StoragePath'
+    storagePath: 'NFTStoreFrontV2StoragePath',
+    startBlockHeight: 0
 }
 
 beforeAll(async () => {
     nftCollectionService = new NFTCollectionService(new PrismaClient());
     storeFrontService = new StoreFrontService(nftCollectionService.prisma);
-    await storeFrontService.createStoreFront(storeFront);
+    await storeFrontService.createStoreFront(store);
 
 })
 
@@ -29,7 +30,7 @@ describe('Testing NFTCollectionService', () => {
             address: 'A.0x03.AllDay',
             publicPath: 'AllDayPublicPath',
             storagePath: 'AllDayStoragePath',
-            storeFrontAddress: '0x01'
+            storeAddress: '0x01'
         }
 
         const nftCollection = await nftCollectionService.createNFTCollection(nftCollectionDto);
@@ -40,7 +41,7 @@ describe('Testing NFTCollectionService', () => {
         });
         expect(nFTCollectionOnStoreFronts).not.toBe(null);
         expect(nFTCollectionOnStoreFronts?.nftCollectionId).toEqual(nftCollection.address)
-        expect(nFTCollectionOnStoreFronts?.storFrontId).toEqual(storeFront.address);
+        expect(nFTCollectionOnStoreFronts?.storId).toEqual(store.address);
 
     });
 
@@ -53,7 +54,7 @@ afterAll(async () => {
     await nftCollectionService.prisma.$transaction([
         nftCollectionService.prisma.nFTCollectionOnStoreFronts.deleteMany(),
         nftCollectionService.prisma.nFTCollection.deleteMany(),
-        storeFrontService.prisma.storeFront.deleteMany()
+        storeFrontService.prisma.store.deleteMany()
     ]);
 
     await nftCollectionService.prisma.$disconnect()
