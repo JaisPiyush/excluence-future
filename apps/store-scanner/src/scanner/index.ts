@@ -4,10 +4,10 @@ import { FlowEvent } from '@rayvin-flow/flow-scanner-lib/lib/flow/models/flow-ev
 import { EventBroadcasterInterface } from '@rayvin-flow/flow-scanner-lib/lib/broadcaster/event-broadcaster'
 import { FlowAccessNode, flowNetworkConfigs } from '../config'
 import { getPrismaClient } from 'scanner-store'
-import { PrismaDBSettingService } from './db-settings-service'
+// import { PrismaDBSettingService } from './db-settings-service'
 import {MemorySettingsService} from '@rayvin-flow/flow-scanner-lib/lib/settings/memory-settings-service'
 import { getEvents } from './events'
-import { logger } from './logger';
+// import { logger } from './logger';
 import { Logger } from 'logger'
 
 // create provider for configuration 
@@ -23,7 +23,7 @@ class ExtendedConsoleEventBroadcaster implements EventBroadcasterInterface {
     }
 }
 
-const prisma = getPrismaClient();
+// const prisma = getPrismaClient();
 
 const settingsService = new MemorySettingsService();
 

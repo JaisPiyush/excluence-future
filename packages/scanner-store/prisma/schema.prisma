@@ -10,165 +10,59 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model NFTCollection {
-  // Complete address of the NFT collection in format "A.{0x8...2b}.{name}"
+model Store {
+  version          Int
+  // Complete address A.{address}.{contractName}
+  address          String @id
+  storagePath      String
+  publicPath       String
+  startBlockHeight Int    @default(0)
+
+  MarketEvents MarketEvent[]
+}
+
+model ListedCollection {
+  // Complete address A.{address}.{contractName}
   address String @id
 
-  // Collection storage path
-  storagePath String
-
-  // Collection public path
-  publicPath String
-
-  NFTCollectionOnStoreFronts NFTCollectionOnStoreFronts[]
+  MarketEvents MarketEvent[]
 }
 
-model Store {
-  version                       Int
-  address                       String                          @id
-  storagePath                   String
-  publicPath                    String
-  startBlockHeight              Int                             @default(0)
-  NFTCollectionOnStoreFronts    NFTCollectionOnStoreFronts[]
-  // ListingAvailableOnStoreFronts ListingAvailableOnStoreFronts[]
-  // ListingCompletedOnStoreFront  ListingCompletedOnStoreFront[]
-  FlowEventsOnStore             FlowEventsOnStore[]
+enum MarketEventType {
+  Listing
+  Sale
+  Delisted
 }
 
-model NFTCollectionOnStoreFronts {
-  store      Store    @relation(fields: [storId], references: [address])
-  // Fix this spelling mistake
-  storId     String
-  nftCollection   NFTCollection @relation(fields: [nftCollectionId], references: [address])
-  nftCollectionId String
+model MarketEvent {
+  eventType         MarketEventType  @default(Listing)
+  collection        ListedCollection @relation(fields: [collectionId], references: [address])
+  collectionId String
+  nftType           String
+  nftUUID           Int
+  nftID             Int
+  salePrice         Int @default(0)
+  salePaymentVaultType String
 
-  @@id([storId, nftCollectionId])
+  // Store address for which event was emitted
+  store   Store  @relation(fields: [storeId], references: [address])
+  storeId String
+
+  expiry                 Int
+  purchased              Boolean @default(false)
+  isListingActiveForSale Boolean
+  storeFrontAddress      String?
+  nftBuyer               String?
+  nftSeller              String?
+  listingResourceId      Int
+  timestamp              Int
+  txnId                  String
+
+  @@id([eventType, listingResourceId, txnId, timestamp, nftID])
 }
 
-enum FlowEventTypes {
-  ListingAvailable
-  Purchased
-  ListingRemoved
-  NFTWithdrawn
-  NFTDeposit
+model StoreScannerConfig {
+  scannerId String @id
+  blockHeight String
+  
 }
-
-model FlowEvent {
-  // Complete address of the NFT collection in format "A.{0x8...2b}.{name}"
-  collection    String
-  eventName     FlowEventTypes @default(ListingAvailable)
-  timestamp     Int
-  blockHeight   Int
-  transactionId String
-  eventId       String         @id
-  data          Json
-
-  FlowEventsOnStore FlowEventsOnStore[]
-}
-
-model FlowEventsOnStore {
-  flowEvent   FlowEvent  @relation(fields: [flowEventId], references: [eventId])
-  flowEventId String
-  store       Store @relation(fields: [storeId], references: [address])
-  storeId     String
-
-  @@id([flowEventId, storeId])
-}
-
-// model ListingAvailable {
-//   // Complete address of the NFT collection in format "A.{0x8...2b}.{name}"
-//   collection        String
-//   nftId             Int
-//   storeFrontAddress String
-
-//   listingResourceId Int @id
-
-//   nftUUID Int
-
-//   salePrice            Float
-//   expiry               Int
-//   salePaymentVaultType String
-//   blockHeight          Int
-//   transactionId        String
-
-//   commissionAmount Float
-
-//   // Timestamp of event emitted
-//   timestamp Int
-
-//   ListingAvailableOnStoreFronts ListingAvailableOnStoreFronts[]
-// }
-
-// model ListingAvailableOnStoreFronts {
-//   listingAvailable   ListingAvailable @relation(fields: [listingAvailableId], references: [listingResourceId])
-//   listingAvailableId Int
-//   storeFront         StoreFront       @relation(fields: [storeFrontId], references: [address])
-//   storeFrontId       String
-
-//   @@id([listingAvailableId, storeFrontId])
-// }
-
-// model ListingCompleted {
-//   // Complete address of the NFT collection in format "A.{0x8...2b}.{name}"
-//   collection        String
-//   nftId             Int
-//   storeFrontAddress String
-
-//   purchased Boolean
-
-//   listingResourceId Int @id
-
-//   nftUUID Int
-
-//   salePrice             Float
-//   expiry                Int
-//   salePayementVaultType String
-
-//   blockHeight   Int
-//   transactionId String
-
-//   commisionAmount Float
-
-//   // Timestamp of event emitted
-//   timestamp Int
-
-//   ListingCompletedOnStoreFront ListingCompletedOnStoreFront[]
-// }
-
-// model ListingCompletedOnStoreFront {
-//   listingCompleted   ListingCompleted @relation(fields: [listingCompletedId], references: [listingResourceId])
-//   listingCompletedId Int
-//   storeFront         StoreFront       @relation(fields: [storeFrontId], references: [address])
-//   storeFrontId       String
-
-//   @@id([listingCompletedId, storeFrontId])
-// }
-
-// model NFTWithdraw {
-//   collection String
-//   nftId      Int
-//   benf       String
-//   timestamp  Int
-
-//   blockHeight   Int
-//   transactionId String
-
-//   @@id([collection, nftId, benf, transactionId])
-// }
-
-// model NFTDeposit {
-//   collection String
-//   nftId      Int
-//   benf       String
-//   timestamp  Int
-
-//   blockHeight   Int
-//   transactionId String
-
-//   @@id([collection, nftId, benf, transactionId])
-// }
-
-// model StoreScannerConfig {
-//   scannerId   String @id
-//   blockHeight String
-// }
