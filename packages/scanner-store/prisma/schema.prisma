@@ -48,7 +48,7 @@ model MarketEvent {
   store   Store  @relation(fields: [storeId], references: [address])
   storeId String
 
-  expiry                 Int
+  expiry                 Int?
   purchased              Boolean @default(false)
   isListingActiveForSale Boolean
   storeFrontAddress      String?
@@ -57,12 +57,12 @@ model MarketEvent {
   listingResourceId      Int
   timestamp              Int
   txnId                  String
+  blockHeight Int @default(0)
 
-  @@id([eventType, listingResourceId, txnId, timestamp, nftID])
+  @@id([eventType, listingResourceId, collectionId, storeId])
 }
 
 model StoreScannerConfig {
   scannerId String @id
   blockHeight String
-  
 }
