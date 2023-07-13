@@ -16,7 +16,7 @@ model Store {
   address          String @id
   storagePath      String
   publicPath       String
-  startBlockHeight Int    @default(0)
+  startBlockHeight BigInt    @default(0)
 
   MarketEvents MarketEvent[]
 }
@@ -39,25 +39,25 @@ model MarketEvent {
   collection        ListedCollection @relation(fields: [collectionId], references: [address])
   collectionId String
   nftType           String
-  nftUUID           Int
-  nftID             Int
-  salePrice         Int @default(0)
+  nftUUID           BigInt
+  nftID             BigInt
+  salePrice         String @default("0")
   salePaymentVaultType String
 
   // Store address for which event was emitted
   store   Store  @relation(fields: [storeId], references: [address])
   storeId String
 
-  expiry                 Int?
+  expiry                 BigInt?
   purchased              Boolean @default(false)
   isListingActiveForSale Boolean
   storeFrontAddress      String?
   nftBuyer               String?
   nftSeller              String?
-  listingResourceId      Int
-  timestamp              Int
+  listingResourceId      BigInt
+  timestamp              BigInt
   txnId                  String
-  blockHeight Int @default(0)
+  blockHeight BigInt @default(0)
 
   @@id([eventType, listingResourceId, collectionId, storeId])
 }

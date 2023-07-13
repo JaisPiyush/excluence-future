@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "MarketEvent" ALTER COLUMN "salePrice" SET DEFAULT '0',
+ALTER COLUMN "salePrice" SET DATA TYPE TEXT;

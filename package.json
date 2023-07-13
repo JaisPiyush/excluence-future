@@ -10,7 +10,10 @@
     "test_run:scanner-store": "dotenv -e .env.test -- yarn workspace scanner-store run",
     "test:scanner-store": "dotenv -e .env.test -- yarn workspace scanner-store run test",
     "start:scanner": "dotenv  -- yarn workspace store-scanner run start",
-    "dev:api": "dotenv -- turbo run dev --filter=api"
+    "dev:api": "dotenv -- turbo run dev --filter=api",
+    "start:test_scanner": "dotenv -e .env.test -- yarn workspace store-scanner run start",
+    "script": "dotenv -- yarn",
+    "script:test": "dotenv -e .env.test -- yarn"
   },
   "devDependencies": {
     "@turbo/gen": "^1.9.7",

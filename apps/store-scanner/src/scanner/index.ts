@@ -9,6 +9,8 @@ import {MemorySettingsService} from '@rayvin-flow/flow-scanner-lib/lib/settings/
 import { getEvents } from './events'
 // import { logger } from './logger';
 import { Logger } from 'logger'
+import { defaultQueue, setupBullMQProcess } from 'steward'
+import { AddListingJob } from 'steward/src/jobs/AddListing.job'
 
 // create provider for configuration 
 const configProvider: ConfigProvider = () => ({
@@ -17,9 +19,11 @@ const configProvider: ConfigProvider = () => ({
     maxFlowRequestsPerSecond: 10
 })
 
-class ExtendedConsoleEventBroadcaster implements EventBroadcasterInterface {
+class QueueEventBroadcaster implements EventBroadcasterInterface {
     broadcastEvents =  async (blockHeight: number, events: FlowEvent[]) : Promise<void> => {
+        const name = Date.now().toString();
         console.log(`Broadcasting ${events.length} events: ${JSON.stringify(events[0].data)}`)
+        await defaultQueue.add(name, new AddListingJob(events[0]));
     }
 }
 
@@ -27,7 +31,7 @@ class ExtendedConsoleEventBroadcaster implements EventBroadcasterInterface {
 
 const settingsService = new MemorySettingsService();
 
-const eventBroadcaster = new ExtendedConsoleEventBroadcaster();
+const eventBroadcaster = new QueueEventBroadcaster();
 
 const flowScanner = new FlowScanner(
     // event types to monitor
@@ -46,6 +50,7 @@ export const main = async () => {
     // the scanner is a very I/O constrained process and not very CPU intensive, so as long as you are not bottlenecking the CPU with
     // your own application logic there should be plenty of room for it to process
     console.log('Starting scanner')
+    await setupBullMQProcess();
     await flowScanner.start()
 
     // wait for interrupt signal

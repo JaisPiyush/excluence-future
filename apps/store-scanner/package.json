@@ -15,6 +15,7 @@
     "logger": "*"
   },
   "scripts": {
-    "start": "ts-node src/index.ts"
+    "start": "ts-node src/index.ts",
+    "run:setup_account": "ts-node src/scripts/setup_stores.ts"
   }
 }
