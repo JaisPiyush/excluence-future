@@ -16,14 +16,16 @@ model Store {
   address          String @id
   storagePath      String
   publicPath       String
-  startBlockHeight BigInt    @default(0)
+  startBlockHeight BigInt @default(0)
 
   MarketEvents MarketEvent[]
+  StoreEvents  StoreEvents[]
 }
 
 model StoreEvents {
+  store   Store  @relation(fields: [address], references: [address])
   address String
-  event String
+  event   String
 
   @@id([address, event])
 }
@@ -42,13 +44,13 @@ enum MarketEventType {
 }
 
 model MarketEvent {
-  eventType         MarketEventType  @default(Listing)
-  collection        ListedCollection @relation(fields: [collectionId], references: [address])
-  collectionId String
-  nftType           String
-  nftUUID           BigInt
-  nftID             BigInt
-  salePrice         String @default("0")
+  eventType            MarketEventType  @default(Listing)
+  collection           ListedCollection @relation(fields: [collectionId], references: [address])
+  collectionId         String
+  nftType              String
+  nftUUID              BigInt
+  nftID                BigInt
+  salePrice            String           @default("0")
   salePaymentVaultType String
 
   // Store address for which event was emitted
@@ -64,12 +66,12 @@ model MarketEvent {
   listingResourceId      BigInt
   timestamp              BigInt
   txnId                  String
-  blockHeight BigInt @default(0)
+  blockHeight            BigInt  @default(0)
 
   @@id([eventType, listingResourceId, collectionId, storeId])
 }
 
 model StoreScannerConfig {
-  scannerId String @id
+  scannerId   String @id
   blockHeight String
 }

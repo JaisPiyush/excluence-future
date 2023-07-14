@@ -20,6 +20,7 @@
     "migrate": "prisma migrate dev",
     "test": "jest",
     "db:push": "prisma db push",
-    "clean": "ts-node ./cleanup.ts"
+    "clean": "ts-node ./cleanup.ts",
+    "format": "prisma format"
   }
 }

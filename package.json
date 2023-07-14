@@ -3,18 +3,18 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "dotenv -- turbo run dev",
-    "dev:test": "dotenv -e .env.test -- turbo run dev",
+    "dev:testnet": "dotenv -e .env.test -- turbo run dev",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "migrate:scanner-store": "dotenv -- yarn workspace scanner-store migrate",
-    "migrate:test_scanner-store": "dotenv -e .env.test -- yarn workspace scanner-store migrate",
-    "test_run:scanner-store": "dotenv -e .env.test -- yarn workspace scanner-store run",
-    "test:scanner-store": "dotenv -e .env.test -- yarn workspace scanner-store run test",
+    "migrate:testnet_scanner-store": "dotenv -e .env.test -- yarn workspace scanner-store migrate",
+    "testnet_run:scanner-store": "dotenv -e .env.test -- yarn workspace scanner-store run",
+    "testnet:scanner-store": "dotenv -e .env.test -- yarn workspace scanner-store run test",
     "start:scanner": "dotenv  -- yarn workspace store-scanner run start",
     "dev:api": "dotenv -- turbo run dev --filter=api",
-    "start:test_scanner": "dotenv -e .env.test -- yarn workspace store-scanner run start",
+    "start:testnet_scanner": "dotenv -e .env.test -- yarn workspace store-scanner run start",
     "script": "dotenv -- yarn",
-    "script:test": "dotenv -e .env.test -- yarn"
+    "script:testnet": "dotenv -e .env.test -- yarn"
   },
   "devDependencies": {
     "@turbo/gen": "^1.9.7",
