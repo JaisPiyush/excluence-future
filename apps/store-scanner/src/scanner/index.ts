@@ -9,7 +9,7 @@ import { Logger } from 'logger'
 import { setupBullMQProcess } from 'steward'
 import { QueueEventBroadcaster } from './event-broadcaster'
 
-const flowNetwork = process.env['NEXT_JS_PUBLIC_FLOW_NETWORK'] || FlowAccessNode.Mainnet;
+const flowNetwork = process.env['NEXT_PUBLIC_FLOW_NETWORK'] || FlowAccessNode.Mainnet;
 // create provider for configuration 
 const configProvider: ConfigProvider = () => ({
     defaultStartBlockHeight: 56381377, // this is the block height that the scanner will start from on the very first run

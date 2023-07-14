@@ -5,7 +5,9 @@ interface ConnectWalletButtonProps {}
 
 export default function ConnectWalletButton(props: ConnectWalletButtonProps) {
     return <Button variant="outlined" 
-                onClick={() => {}}
+                onClick={() => {
+                    fcl.authenticate();
+                }}
             >
                 Connect Wallet
             </Button>
