@@ -3,7 +3,7 @@ import { Box, CircularProgress, Modal, Typography } from "@mui/material";
 export interface LoaderModalProps {
     open: boolean;
     onClose: () => void;
-    loadingTex?: string
+    loadingText?: string
 }
 
 const style = {
@@ -38,7 +38,7 @@ export default function LoaderModal(props: LoaderModalProps) {
                     alignItems: 'center'
                 }}>
                     <CircularProgress size={"4rem"} />
-                    <Typography sx={{marginTop: '2rem'}} variant="body1" color="primary.light">{props.loadingTex || 'Loading...'}</Typography>
+                    <Typography sx={{marginTop: '2rem'}} variant="body1" color="primary.light">{props.loadingText || 'Loading...'}</Typography>
                 </Box>
         </Modal>
 }
