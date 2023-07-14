@@ -14,10 +14,10 @@ import * as fcl from "@onflow/fcl"
 import type { AppProps } from 'next/app'
 
 fcl.config({
-  "accessNode.api": "https://mainnet.onflow.org",
-  "flow.network": "mainnet",
+  "accessNode.api": process.env['NEXT_JS_PUBLIC_FLOW_ACCESS_NODE'],
+  "flow.network": process.env['NEXT_JS_PUBLIC_FLOW_NETWORK'],
   "discovery.wallet": "https://fcl-discovery.onflow.org/testnet/authn",
-  "env": "mainnet",
+  "env": process.env['NEXT_JS_PUBLIC_FLOW_NETWORK'],
   "app.detail.title": "Excluence",
 });
 

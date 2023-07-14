@@ -6,6 +6,9 @@ export default function Home() {
     <>
       <Head>
         <title>Excluence</title>
+        <meta name="description" content="Excluence is an NFT Marketplace aggregator on Flow network" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="/favicon.ico" />
       </Head>
       
     </>
