@@ -21,6 +21,13 @@ model Store {
   MarketEvents MarketEvent[]
 }
 
+model StoreEvents {
+  address String
+  event String
+
+  @@id([address, event])
+}
+
 model ListedCollection {
   // Complete address A.{address}.{contractName}
   address String @id

@@ -1,13 +1,30 @@
 import { PrismaClient } from "@prisma/client";
-import { CreateStoreDto } from "./store.dto";
+import { CreateStoreDto, CreateStoreWithEventsDto } from "./store.dto";
+import { CreateStoreEventsDto } from "../storeEvents/storeEvents.dto";
+import { StoreEventsService } from "../storeEvents/storeEvents.service";
 
 export class StoreService {
-    constructor(public readonly prisma: PrismaClient) {}
+    public readonly storeEventsService: StoreEventsService;
+    constructor(public readonly prisma: PrismaClient) {
+        this.storeEventsService = new StoreEventsService(prisma);
+    }
 
     async create(args: CreateStoreDto) {
         return await this.prisma.store.create({
             data: args
         });
+    }
+
+    async createWithEvents(args: CreateStoreWithEventsDto) {
+        const store = await this.create(args.store);
+        const events: CreateStoreEventsDto[] = args.events.map((event) => {
+            return {
+                address: store.address,
+                event
+            }
+        });
+
+        return await this.storeEventsService.createMany(events);
     }
 
     async findAll() {

@@ -5,3 +5,8 @@ export interface CreateStoreDto {
     publicPath: string;
     startBlockHeight?: number;
 }
+
+export interface CreateStoreWithEventsDto{
+    store: CreateStoreDto;
+    events: string[]
+}
