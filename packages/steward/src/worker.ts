@@ -16,7 +16,7 @@ export interface WorkerReply {
 }
 
 fcl.config({
-    "accessNode.api": "https://mainnet.onflow.org"
+    "accessNode.api": process.env['NEXT_JS_PUBLIC_FLOW_ACCESS_NODE']
 })
 
 export const defaultWorker = (queueName: string, prisma: PrismaClient) => {
