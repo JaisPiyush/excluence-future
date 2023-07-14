@@ -2,11 +2,10 @@ import { server } from "./server";
 import {Server} from "@hapi/hapi";
 import {Logger} from "logger";
 import { BaseApiModule } from "./modules/base";
-import { StoreFrontModule } from "./modules/store-front.module";
 import { getPrismaClient } from "scanner-store";
 
 const modules: typeof BaseApiModule[] = [
-    StoreFrontModule
+
 ];
 
 const registerAllModules = (server: Server) => {

@@ -2,7 +2,7 @@ import { Job } from "bullmq";
 import { JobImp, BaseJob } from "./job.definition";
 import { FlowCapturedEvent, FlowNamedType } from "./types";
 import { CreateListingDto, ListedCollectionService, MarketEventService, Prisma, PrismaClient } from "scanner-store";
-import { getContractId } from ".";
+import { getContractId } from "./utils";
 import { Logger } from "logger";
 
 interface AddListingData {

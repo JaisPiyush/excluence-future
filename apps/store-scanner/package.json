@@ -9,10 +9,12 @@
     "tsconfig": "*"
   },
   "dependencies": {
+    "@onflow/fcl": "^1.4.1",
     "@rayvin-flow/flow-scanner-lib": "^1.0.1",
-    "steward": "*",
+    "class-transformer": "^0.5.1",
+    "logger": "*",
     "scanner-store": "*",
-    "logger": "*"
+    "steward": "*"
   },
   "scripts": {
     "start": "ts-node src/index.ts",

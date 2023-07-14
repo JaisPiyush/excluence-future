@@ -42,5 +42,5 @@ export interface CreateSaleEventDto {
     blockHeight: number;
 }
 
-export type CreateDeListedEventDto = CreateSaleEventDto;
+export type CreateDeListedEventDto = Omit<CreateSaleEventDto, "nftBuyer" | "nftSeller">;
 

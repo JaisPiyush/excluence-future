@@ -2,16 +2,22 @@ import {Job, Worker} from "bullmq";
 import { isEmpty } from "lodash";
 
 import { connection, concurrency } from "./config";
-import { getJobInstance } from "./jobs";
+import { BaseJob, getJobInstance } from "./jobs";
 import { JobImp } from "./jobs";
 import {Logger} from "logger";
-import { PrismaClient, getPrismaClient } from "scanner-store";
+import { PrismaClient } from "scanner-store";
+
+import * as fcl from "@onflow/fcl";
 
 
 export interface WorkerReply {
     status: number;
     message: string;
 }
+
+fcl.config({
+    "accessNode.api": "https://mainnet.onflow.org"
+})
 
 export const defaultWorker = (queueName: string, prisma: PrismaClient) => {
     const worker = new Worker<JobImp, WorkerReply>(
@@ -37,7 +43,10 @@ export const defaultWorker = (queueName: string, prisma: PrismaClient) => {
     worker.on("failed", (job: any, 
                         _err: Error, prev: string) => {
         const instance = getJobInstance(job.data);
-        instance?.failed(job).then(() => {});
+        
+        if (instance && instance instanceof BaseJob) {
+            instance.failed(job).then(() => {});
+        }
         Logger.error(`${job.id} has failed`);
     })
 }

@@ -1,16 +1,14 @@
 import {FlowScanner} from '@rayvin-flow/flow-scanner-lib'
 import {ConfigProvider} from '@rayvin-flow/flow-scanner-lib/lib/providers/config-provider'
-import { FlowEvent } from '@rayvin-flow/flow-scanner-lib/lib/flow/models/flow-event'
-import { EventBroadcasterInterface } from '@rayvin-flow/flow-scanner-lib/lib/broadcaster/event-broadcaster'
 import { FlowAccessNode, flowNetworkConfigs } from '../config'
-import { getPrismaClient } from 'scanner-store'
 // import { PrismaDBSettingService } from './db-settings-service'
 import {MemorySettingsService} from '@rayvin-flow/flow-scanner-lib/lib/settings/memory-settings-service'
 import { getEvents } from './events'
 // import { logger } from './logger';
 import { Logger } from 'logger'
-import { defaultQueue, setupBullMQProcess } from 'steward'
-import { AddListingJob } from 'steward/src/jobs/AddListing.job'
+import { setupBullMQProcess } from 'steward'
+import { QueueEventBroadcaster } from './event-broadcaster'
+
 
 // create provider for configuration 
 const configProvider: ConfigProvider = () => ({
@@ -19,13 +17,6 @@ const configProvider: ConfigProvider = () => ({
     maxFlowRequestsPerSecond: 10
 })
 
-class QueueEventBroadcaster implements EventBroadcasterInterface {
-    broadcastEvents =  async (blockHeight: number, events: FlowEvent[]) : Promise<void> => {
-        const name = Date.now().toString();
-        console.log(`Broadcasting ${events.length} events: ${JSON.stringify(events[0].data)}`)
-        await defaultQueue.add(name, new AddListingJob(events[0]));
-    }
-}
 
 // const prisma = getPrismaClient();
 
