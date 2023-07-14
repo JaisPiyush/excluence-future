@@ -7,9 +7,9 @@ export const darkTheme = createTheme({
             main: '#E94560'
         },
         secondary: {
-            dark: '#16213E',
-            main: '#0F3460',
-            light: '#533483'
+            dark: '#151417',
+            main: '#22262E',
+            light: '#343845'
         }
     },
     typography: {
@@ -22,6 +22,13 @@ export const darkTheme = createTheme({
         MuiUseMediaQuery: {
             defaultProps: {
                 noSsr: true
+            }
+        },
+        MuiButton: {
+            defaultProps: {
+                sx: {
+                    textTransform: 'unset !important',
+                }
             }
         }
     }
