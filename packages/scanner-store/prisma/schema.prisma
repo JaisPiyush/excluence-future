@@ -50,7 +50,7 @@ model MarketEvent {
   nftType              String
   nftUUID              BigInt
   nftID                BigInt
-  salePrice            String           @default("0")
+  salePrice            BigInt @default(0)
   salePaymentVaultType String
 
   // Store address for which event was emitted

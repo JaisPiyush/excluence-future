@@ -4,7 +4,7 @@ import { FlowCapturedEvent, FlowNamedType } from "./types";
 import { CreateListingDto, ListedCollectionService, MarketEventService, Prisma, PrismaClient } from "scanner-store";
 import { getContractId } from "./utils";
 import { Logger } from "logger";
-import { getUTCTime } from "../utils";
+import { getUTCTime, stringToBigInt } from "../utils";
 
 interface AddListingData {
     storefrontAddress: string;
@@ -57,7 +57,7 @@ export class AddListingJob extends BaseJob implements JobImp {
                 nftType: nftType,
                 nftUUID: data.data.nftUUID,
                 nftID: data.data.nftID,
-                salePrice: data.data.salePrice,
+                salePrice: stringToBigInt(data.data.salePrice),
                 salePaymentVaultType: data.data.salePaymentVaultType.typeID,
                 storeId: getContractId(data.type),
                 expiry: data.data.expiry,

@@ -7,3 +7,10 @@ export function getUTCTime(dateTimeString: string): Date {
   
     return dateTimeUTC;
   }
+
+export function stringToBigInt(number: string) {
+  const float = Math.floor(parseFloat(number) * Math.pow(10, 8));
+  return BigInt(float);
+
+
+}
