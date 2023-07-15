@@ -13,8 +13,8 @@
     "start:scanner": "dotenv  -- yarn workspace store-scanner run start",
     "dev:api": "dotenv -- turbo run dev --filter=api",
     "start:testnet_scanner": "dotenv -e .env.test -- yarn workspace store-scanner run start",
-    "script": "dotenv -- yarn",
-    "script:testnet": "dotenv -e .env.test -- yarn"
+    "script": "dotenv -- yarn workspace",
+    "script:testnet": "dotenv -e .env.test -- yarn workspace"
   },
   "devDependencies": {
     "@turbo/gen": "^1.9.7",

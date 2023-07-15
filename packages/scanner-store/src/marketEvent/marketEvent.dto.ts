@@ -7,7 +7,7 @@ export interface CreateListingDto {
     salePaymentVaultType: string;
     storeId: string;
     expiry: number;
-    timestamp: number;
+    timestamp: Date;
     txnId: string;
     listingResourceId: number;
     storeFrontAddress: string;
@@ -37,7 +37,7 @@ export interface CreateSaleEventDto {
     nftBuyer: string;
     nftSeller: string;
     listingResourceId: number;
-    timestamp: number;
+    timestamp: Date;
     txnId: string;
     blockHeight: number;
 }

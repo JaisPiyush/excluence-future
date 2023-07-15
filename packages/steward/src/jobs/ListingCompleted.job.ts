@@ -5,6 +5,7 @@ import { FlowCapturedEvent, FlowNamedType } from "./types";
 import * as fcl from "@onflow/fcl";
 import { getContractId } from "./utils";
 import { Logger } from "logger";
+import { getUTCTime } from "../utils";
 
 interface ListingCompletedData {
     listingResourceID: number;
@@ -76,7 +77,7 @@ export class ListingCompletedJob extends BaseJob implements JobImp {
             nftID: data.data.nftID,
             salePrice: data.data.salePrice,
             salePaymentVaultType: data.data.salePaymentVaultType.typeID,
-            timestamp: (new Date(data.blockTimestamp)).getTime(),
+            timestamp: getUTCTime(data.blockTimestamp),
             txnId: data.transactionId,
             blockHeight: data.blockHeight,
             listingResourceId: data.data.listingResourceID,
@@ -127,7 +128,7 @@ export class ListingCompletedJob extends BaseJob implements JobImp {
             nftID: data.data.nftID,
             salePrice: data.data.salePrice,
             salePaymentVaultType: data.data.salePaymentVaultType.typeID,
-            timestamp: (new Date(data.blockTimestamp)).getTime(),
+            timestamp: getUTCTime(data.blockTimestamp),
             txnId: data.transactionId,
             blockHeight: data.blockHeight,
             listingResourceId: data.data.listingResourceID,

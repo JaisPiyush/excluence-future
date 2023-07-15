@@ -9,12 +9,12 @@ export const darkTheme = createTheme({
         secondary: {
             dark: '#151417',
             main: '#22262E',
-            light: '#343845'
+            light: '#767F90'
         }
     },
     typography: {
         fontFamily: [
-            'Roboto',
+            'Poppins',
             'sans-serif'
         ].join(',')
     },
@@ -30,6 +30,13 @@ export const darkTheme = createTheme({
                     textTransform: 'unset !important',
                 }
             }
-        }
+        },
+        MuiTab: {
+            defaultProps: {
+                sx: {
+                    textTransform: 'unset !important',
+                }
+            }
+        },
     }
 });

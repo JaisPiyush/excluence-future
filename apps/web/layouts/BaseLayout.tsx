@@ -33,7 +33,8 @@ export default function BaseLayout(props: {children: ReactNode}) {
                     height: '100vh',
                     overflowX: 'hidden',
                     maxHeight: 'auto',
-                    overflowY: 'auto'
+                    overflowY: 'auto',
+                    textTransform: 'unset !important'
                 }}
             >   
                 <NavBar />

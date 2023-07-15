@@ -64,7 +64,7 @@ model MarketEvent {
   nftBuyer               String?
   nftSeller              String?
   listingResourceId      BigInt
-  timestamp              BigInt
+  timestamp              DateTime
   txnId                  String
   blockHeight            BigInt  @default(0)
 

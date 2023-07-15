@@ -1,7 +1,12 @@
+import Market from '@/modules/Market'
+import { Box, Tab, Tabs } from '@mui/material'
 import Head from 'next/head'
+import { useState } from 'react'
 
 
 export default function Home() {
+
+  const [tabIndex, setTabIndex] = useState(0)
   return (
     <>
       <Head>
@@ -10,6 +15,21 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+
+      <Box sx={{
+        width: '100%', 
+        bgcolor: 'secondary.main',
+        paddingX: '2rem'
+      }}>
+        <Tabs value={tabIndex}>
+          <Tab label="Trending" />
+          <Tab label="Owned" />
+        </Tabs>
+      </Box>
+
+      <Box>
+        <Market tabIndex={tabIndex} />
+      </Box>
       
     </>
   )
