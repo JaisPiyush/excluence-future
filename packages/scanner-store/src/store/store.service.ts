@@ -38,4 +38,17 @@ export class StoreService {
             }
         })
     }
+
+    async findAllStoreEvents() {
+        return await this.prisma.store.findMany({
+            include: {
+                StoreEvents: {
+                    select: {
+                        address: true, 
+                        event: true
+                    }
+                }
+            }
+        });
+    }
 }

@@ -18,6 +18,10 @@ export const events: StoreEventData[] = [
     }
 ]
 
+export const getEventName = (event: StoreEventData) => {
+    return `${event.address}.${event.event}`;
+}
+
 export const getEvents = () => {
     return events.map((event) => `${event.address}.${event.event}`)
 }

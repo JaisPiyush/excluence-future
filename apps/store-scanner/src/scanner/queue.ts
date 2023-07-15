@@ -18,3 +18,8 @@ export function getQueueName(): string {
     if (flowNetwork === FlowAccessNode.Testnet) return queueForTestnetName;
     return queueForMainnetName;
 }
+
+export function getFormattedQueueName(queueName: string) {
+    const flowNetwork = process.env['NEXT_PUBLIC_FLOW_NETWORK'] || FlowAccessNode.Mainnet;
+    return `${queueName}-${flowNetwork}`;
+}

@@ -3,9 +3,10 @@ import {Server} from "@hapi/hapi";
 import {Logger} from "logger";
 import { BaseApiModule } from "./modules/base";
 import { getPrismaClient } from "scanner-store";
+import { ListedCollectionAPIModule } from "./modules/listedCollection.module";
 
 const modules: typeof BaseApiModule[] = [
-
+    ListedCollectionAPIModule
 ];
 
 const registerAllModules = (server: Server) => {

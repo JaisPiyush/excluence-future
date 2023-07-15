@@ -5,6 +5,9 @@ import { Logger } from "logger";
 import { getQueue } from "./queue";
 
 export class QueueEventBroadcaster implements EventBroadcasterInterface {
+
+    // constructor(private readonly collectionId: string) {}
+
     broadcastEvents =  async (blockHeight: number, events: FlowEvent[]) : Promise<void> => {
         Logger.info(`Indexed block: ${blockHeight}`);
         const queue = getQueue();

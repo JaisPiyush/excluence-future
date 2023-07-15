@@ -67,5 +67,13 @@ export class MarketEventService {
         });
     }
 
+    // async getTrendingCollections() {
+    //     return await this.prisma.marketEvent.aggregate({
+    //         _count: {
+    //             purchased: true,
+    //         }
+    //     })
+    // }
+
 
 }

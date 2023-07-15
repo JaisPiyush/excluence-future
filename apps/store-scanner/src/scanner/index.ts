@@ -1,60 +1,89 @@
 import {FlowScanner} from '@rayvin-flow/flow-scanner-lib'
 import {ConfigProvider} from '@rayvin-flow/flow-scanner-lib/lib/providers/config-provider'
 import { FlowAccessNode, flowNetworkConfigs } from '../config'
-// import { PrismaDBSettingService } from './db-settings-service'
 import {MemorySettingsService} from '@rayvin-flow/flow-scanner-lib/lib/settings/memory-settings-service'
-import { getEvents } from './events'
-// import { logger } from './logger';
+import { getEventName, getEvents } from './events'
 import { Logger } from 'logger'
-import { setupBullMQProcess } from 'steward'
+import { createQueue, setupBullMQProcess } from 'steward'
 import { QueueEventBroadcaster } from './event-broadcaster'
-import { logger } from './logger'
-import { getPrismaClient } from 'scanner-store'
+import { StoreService, getPrismaClient } from 'scanner-store'
 import { PrismaDBSettingService } from './db-settings-service'
-import { getQueueName } from './queue'
+import { getFormattedQueueName, getQueueName } from './queue'
+import { logger } from './logger'
 
 const flowNetwork = process.env['NEXT_PUBLIC_FLOW_NETWORK'] || FlowAccessNode.Mainnet;
 
 // create provider for configuration 
 const configProvider: ConfigProvider = () => ({
-    defaultStartBlockHeight: 50305116, // this is the block height that the scanner will start from on the very first run
+    defaultStartBlockHeight: 56741805, // this is the block height that the scanner will start from on the very first run
     flowAccessNode: flowNetworkConfigs[flowNetwork as FlowAccessNode],
-    maxFlowRequestsPerSecond: 10
+    maxFlowRequestsPerSecond: 5
 })
 
 
 const prisma = getPrismaClient();
 
-const settingsService = new PrismaDBSettingService(
-    `${flowNetwork}_main_scanner`,
-    prisma,
-    true
-);
+// const settingsService = new PrismaDBSettingService(
+//     `${flowNetwork}_main_scanner`,
+//     prisma,
+//     true
+// );
+
+// const settingsService = new MemorySettingsService()
 
 const eventBroadcaster = new QueueEventBroadcaster();
 
-const flowScanner = new FlowScanner(
-    // event types to monitor
-    getEvents(),
-    // pass in the configured providers
-    {
-        configProvider: configProvider,
-        eventBroadcasterProvider: async () => eventBroadcaster,
-        settingsServiceProvider: async () => settingsService,
-        logProvider: logger
-    }
-);
+// const flowScanner = new FlowScanner(
+//     // event types to monitor
+//     getEvents(),
+//     // pass in the configured providers
+//     {
+//         configProvider: configProvider,
+//         eventBroadcasterProvider: async () => eventBroadcaster,
+//         settingsServiceProvider: async () => settingsService,
+//         logProvider: logger
+//     }
+// );
+
+
 
 export const main = async () => {
-    // start the scanner
-    // this method will return as soon as the scanner has started and continue to run in the background using setTimeout calls
-    // the scanner is a very I/O constrained process and not very CPU intensive, so as long as you are not bottlenecking the CPU with
-    // your own application logic there should be plenty of room for it to process
-    console.log('Starting scanner');
-    await settingsService.initProcessedHeight(configProvider().defaultStartBlockHeight || 0)
-    await setupBullMQProcess(getQueueName());
 
-    await flowScanner.start()
+    const storeService = new StoreService(prisma);
+    const flowEvents = await storeService.findAllStoreEvents();
+
+    const flowScanners = await Promise.all(flowEvents.map( async (flowStore) => {
+        Logger.info(`Scanner for store ${flowStore.address} is starting!`)
+        const configProvider: ConfigProvider = () => ({
+            defaultStartBlockHeight: Number(flowStore.startBlockHeight), // this is the block height that the scanner will start from on the very first run
+            flowAccessNode: flowNetworkConfigs[flowNetwork as FlowAccessNode],
+            maxFlowRequestsPerSecond: 5
+        })
+        const settingsService = new PrismaDBSettingService(
+            `${flowNetwork}_${flowStore.address}`,
+            prisma,
+            true
+        );
+
+        const events = flowStore.StoreEvents.map((event) => getEventName(event))
+        // console.log(events)
+
+        const flowScanner = new FlowScanner(
+            // event types to monitor
+            flowStore.StoreEvents.map((event) => getEventName(event)),
+            // pass in the configured providers
+            {
+                configProvider: configProvider,
+                eventBroadcasterProvider: async () => eventBroadcaster,
+                settingsServiceProvider: async () => settingsService,
+                // logProvider: logger
+            }
+        );
+        await settingsService.initProcessedHeight(configProvider().defaultStartBlockHeight || 0)
+        await setupBullMQProcess(getQueueName());
+        await flowScanner.start();
+        return flowScanner;
+    }));
 
     // wait for interrupt signal
     await new Promise<void>(resolve => {
@@ -70,8 +99,10 @@ export const main = async () => {
         })
     })
 
-    // when you are ready to stop the scanner, you can call the stop() method
+
     Logger.info('Stopping scanner')
-    await flowScanner.stop()
+    await Promise.all(flowScanners.map( async (flowScanner) => {
+        return await flowScanner.stop();
+    }));
 }
 

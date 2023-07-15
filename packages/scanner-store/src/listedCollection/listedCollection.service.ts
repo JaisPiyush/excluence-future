@@ -18,4 +18,16 @@ export class ListedCollectionService {
             }
         });
     }
+
+    async getTrendingCollectionsWithSaleData() {
+        return this.prisma.listedCollection.findMany({
+            include: {
+                _count: {
+                    select: {
+                        MarketEvents: true
+                    }
+                }
+            }
+        })
+    }
 }
