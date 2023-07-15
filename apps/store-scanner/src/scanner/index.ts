@@ -13,37 +13,12 @@ import { logger } from './logger'
 
 const flowNetwork = process.env['NEXT_PUBLIC_FLOW_NETWORK'] || FlowAccessNode.Mainnet;
 
-// create provider for configuration 
-const configProvider: ConfigProvider = () => ({
-    defaultStartBlockHeight: 56741805, // this is the block height that the scanner will start from on the very first run
-    flowAccessNode: flowNetworkConfigs[flowNetwork as FlowAccessNode],
-    maxFlowRequestsPerSecond: 5
-})
 
 
 const prisma = getPrismaClient();
 
-// const settingsService = new PrismaDBSettingService(
-//     `${flowNetwork}_main_scanner`,
-//     prisma,
-//     true
-// );
-
-// const settingsService = new MemorySettingsService()
 
 const eventBroadcaster = new QueueEventBroadcaster();
-
-// const flowScanner = new FlowScanner(
-//     // event types to monitor
-//     getEvents(),
-//     // pass in the configured providers
-//     {
-//         configProvider: configProvider,
-//         eventBroadcasterProvider: async () => eventBroadcaster,
-//         settingsServiceProvider: async () => settingsService,
-//         logProvider: logger
-//     }
-// );
 
 
 

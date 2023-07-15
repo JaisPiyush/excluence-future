@@ -3,7 +3,7 @@ export interface CreateListingDto {
     nftType: string;
     nftUUID: number;
     nftID: number;
-    salePrice: number | BigInt;
+    salePrice: number | bigint;
     salePaymentVaultType: string;
     storeId: string;
     expiry: number;
@@ -31,7 +31,7 @@ export interface CreateSaleEventDto {
     nftType: string;
     nftUUID: number;
     nftID: number;
-    salePrice: number | BigInt;
+    salePrice: number | bigint;
     salePaymentVaultType: string;
     storeId: string;
     nftBuyer: string;

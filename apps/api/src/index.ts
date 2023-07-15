@@ -4,9 +4,11 @@ import {Logger} from "logger";
 import { BaseApiModule } from "./modules/base";
 import { getPrismaClient } from "scanner-store";
 import { ListedCollectionAPIModule } from "./modules/listedCollection.module";
+import { StoreAPIModule } from "./modules/store.module";
 
 const modules: typeof BaseApiModule[] = [
-    ListedCollectionAPIModule
+    ListedCollectionAPIModule,
+    StoreAPIModule
 ];
 
 const registerAllModules = (server: Server) => {

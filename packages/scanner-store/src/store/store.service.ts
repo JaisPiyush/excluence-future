@@ -39,6 +39,17 @@ export class StoreService {
         })
     }
 
+    async updateStoreStartHeightBlock(address: string, startBlockHeight: number) {
+        return await this.prisma.store.update({
+            where: {
+                address
+            },
+            data: {
+                startBlockHeight
+            }
+        })
+    }
+
     async findAllStoreEvents() {
         return await this.prisma.store.findMany({
             include: {
