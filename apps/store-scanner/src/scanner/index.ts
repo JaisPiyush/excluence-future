@@ -8,8 +8,13 @@ import { getEvents } from './events'
 import { Logger } from 'logger'
 import { setupBullMQProcess } from 'steward'
 import { QueueEventBroadcaster } from './event-broadcaster'
+import { logger } from './logger'
+import { getPrismaClient } from 'scanner-store'
+import { PrismaDBSettingService } from './db-settings-service'
+import { getQueueName } from './queue'
 
 const flowNetwork = process.env['NEXT_PUBLIC_FLOW_NETWORK'] || FlowAccessNode.Mainnet;
+
 // create provider for configuration 
 const configProvider: ConfigProvider = () => ({
     defaultStartBlockHeight: 50305116, // this is the block height that the scanner will start from on the very first run
@@ -18,9 +23,13 @@ const configProvider: ConfigProvider = () => ({
 })
 
 
-// const prisma = getPrismaClient();
+const prisma = getPrismaClient();
 
-const settingsService = new MemorySettingsService();
+const settingsService = new PrismaDBSettingService(
+    `${flowNetwork}_main_scanner`,
+    prisma,
+    true
+);
 
 const eventBroadcaster = new QueueEventBroadcaster();
 
@@ -32,6 +41,7 @@ const flowScanner = new FlowScanner(
         configProvider: configProvider,
         eventBroadcasterProvider: async () => eventBroadcaster,
         settingsServiceProvider: async () => settingsService,
+        logProvider: logger
     }
 );
 
@@ -40,8 +50,10 @@ export const main = async () => {
     // this method will return as soon as the scanner has started and continue to run in the background using setTimeout calls
     // the scanner is a very I/O constrained process and not very CPU intensive, so as long as you are not bottlenecking the CPU with
     // your own application logic there should be plenty of room for it to process
-    console.log('Starting scanner')
-    await setupBullMQProcess();
+    console.log('Starting scanner');
+    await settingsService.initProcessedHeight(configProvider().defaultStartBlockHeight || 0)
+    await setupBullMQProcess(getQueueName());
+
     await flowScanner.start()
 
     // wait for interrupt signal

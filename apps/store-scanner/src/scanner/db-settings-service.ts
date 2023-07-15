@@ -3,9 +3,17 @@ import {getPrismaClient, StoreScannerConfigService, PrismaClient} from "scanner-
 export class PrismaDBSettingService implements SettingsServiceInterface {
     
     private storeScannerConfigService: StoreScannerConfigService | undefined = undefined;
+    private readonly permanent: boolean;
 
-    constructor(public readonly scannerId: string, prisma: PrismaClient = getPrismaClient()) {
+    constructor(public readonly scannerId: string, prisma: PrismaClient = getPrismaClient(), permanent = false) {
         this.storeScannerConfigService = new StoreScannerConfigService(prisma);
+        this.permanent = permanent;
+    }
+
+    async initProcessedHeight(blockHeight: number) {
+        if ((await this.getProcessedBlockHeight()) === undefined) {
+            await this.setProcessedBlockHeight(blockHeight);
+        }
     }
 
     async getProcessedBlockHeight(): Promise<number | undefined> {
@@ -17,6 +25,7 @@ export class PrismaDBSettingService implements SettingsServiceInterface {
     }
 
     async destroy() {
+        if (this.permanent) return;
         await this.storeScannerConfigService?.destroy(this.scannerId);
     }
 }

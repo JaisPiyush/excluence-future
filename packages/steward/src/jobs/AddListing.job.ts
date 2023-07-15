@@ -4,6 +4,7 @@ import { FlowCapturedEvent, FlowNamedType } from "./types";
 import { CreateListingDto, ListedCollectionService, MarketEventService, Prisma, PrismaClient } from "scanner-store";
 import { getContractId } from "./utils";
 import { Logger } from "logger";
+import { getUTCTime } from "../utils";
 
 interface AddListingData {
     storefrontAddress: string;
@@ -60,7 +61,7 @@ export class AddListingJob extends BaseJob implements JobImp {
                 salePaymentVaultType: data.data.salePaymentVaultType.typeID,
                 storeId: getContractId(data.type),
                 expiry: data.data.expiry,
-                timestamp: (new Date(data.blockTimestamp)).getTime(),
+                timestamp: getUTCTime(data.blockTimestamp),
                 listingResourceId: data.data.listingResourceID,
                 blockHeight: data.blockHeight,
                 txnId: data.transactionId,
@@ -69,21 +70,7 @@ export class AddListingJob extends BaseJob implements JobImp {
 
             Logger.info(`Creating listing ${JSON.stringify(createListingArgs)}`);
 
-            await marketEventService.createListingEvent({
-                collectionId: collectionId,
-                nftType: nftType,
-                nftUUID: data.data.nftUUID,
-                nftID: data.data.nftID,
-                salePrice: data.data.salePrice,
-                salePaymentVaultType: data.data.salePaymentVaultType.typeID,
-                storeId: getContractId(data.type),
-                expiry: data.data.expiry,
-                timestamp: (new Date(data.blockTimestamp)).getTime(),
-                listingResourceId: data.data.listingResourceID,
-                blockHeight: data.blockHeight,
-                txnId: data.transactionId,
-                storeFrontAddress: data.data.storefrontAddress
-            });
+            await marketEventService.createListingEvent(createListingArgs);
 
             Logger.info(`Created listing ${createListingArgs.listingResourceId}`);
 
