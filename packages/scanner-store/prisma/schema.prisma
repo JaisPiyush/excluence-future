@@ -34,7 +34,23 @@ model ListedCollection {
   // Complete address A.{address}.{contractName}
   address String @id
 
-  MarketEvents MarketEvent[]
+  MarketEvents             MarketEvent[]
+  ListedCollectionMetadata ListedCollectionMetadata[]
+}
+
+model ListedCollectionMetadata {
+  collection     ListedCollection @relation(fields: [collectionId], references: [address])
+  collectionId   String           @id
+  publicPath     String
+  privatePath    String
+  storagePath    String
+  contractName   String
+  collectionName String
+  bannerImage    String?
+  squareImage    String
+  description    String?
+  externalURL    String?
+  socials        Json
 }
 
 enum MarketEventType {
@@ -50,7 +66,7 @@ model MarketEvent {
   nftType              String
   nftUUID              BigInt
   nftID                BigInt
-  salePrice            BigInt @default(0)
+  salePrice            BigInt           @default(0)
   salePaymentVaultType String
 
   // Store address for which event was emitted
@@ -58,7 +74,7 @@ model MarketEvent {
   storeId String
 
   expiry                 BigInt?
-  purchased              Boolean @default(false)
+  purchased              Boolean  @default(false)
   isListingActiveForSale Boolean
   storeFrontAddress      String?
   nftBuyer               String?
@@ -66,7 +82,7 @@ model MarketEvent {
   listingResourceId      BigInt
   timestamp              DateTime
   txnId                  String
-  blockHeight            BigInt  @default(0)
+  blockHeight            BigInt   @default(0)
 
   @@id([eventType, listingResourceId, collectionId, storeId])
 }

@@ -16,6 +16,10 @@ export * from "./marketEvent/marketEvent.dto";
 export * from "./listedCollection/listedCollection.service";
 // export * from "./listedCollection/listedCollection.dto";
 
+//ListedCollectionMetadata
+export * from "./listedCollectionMetadata/listedCollectionMetadata.service";
+export * from "./listedCollectionMetadata/listedCollectionMetadata.dto"
+
 export function getPrismaClient() {
     return new PrismaClient();
 }

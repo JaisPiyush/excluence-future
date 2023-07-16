@@ -14,7 +14,8 @@
     "typescript": "^5.1.6"
   },
   "dependencies": {
-    "@prisma/client": "^4.16.2"
+    "@prisma/client": "^4.16.2",
+    "flow-dock": "*"
   },
   "scripts": {
     "migrate": "prisma migrate dev",

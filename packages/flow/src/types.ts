@@ -31,7 +31,7 @@ export interface CollectionViewData extends Record<string, unknown> {
         description: string;
         externalURL: {url: string};
         name: string;
-        socials: Record<string, string>;
+        socials: Record<string, {url: string}>;
         squareImage: MediaFile;
     }
 }

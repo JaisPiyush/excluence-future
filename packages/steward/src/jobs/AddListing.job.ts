@@ -1,7 +1,7 @@
 import { Job } from "bullmq";
 import { JobImp, BaseJob } from "./job.definition";
 import { FlowCapturedEvent, FlowNamedType } from "./types";
-import { CreateListingDto, ListedCollectionService, MarketEventService, Prisma, PrismaClient } from "scanner-store";
+import { CreateListingDto, ListedCollectionMetadataService, ListedCollectionService, MarketEventService, Prisma, PrismaClient, getCreateLCMDtoFromCollectionViewData } from "scanner-store";
 import { getContractId } from "./utils";
 import { Logger } from "logger";
 import { getUTCTime, stringToBigInt } from "../utils";
@@ -35,16 +35,19 @@ export class AddListingJob extends BaseJob implements JobImp {
             const data = this.payload as any as FlowCapturedEvent<AddListingData>;
             const listedCollectionService = new ListedCollectionService(prisma);
             const marketEventService = new MarketEventService(prisma);
+            
             const nftType = data.data.nftType.typeID as string;
             const collectionId = getContractId(nftType);
 
-            if ((await getCollectionView(collectionId)) === null) {
+            const listedCollectionMetadataService = new ListedCollectionMetadataService(prisma);
+            const collectionViewData = await getCollectionView(collectionId);
+
+            if (collectionViewData === null) {
                 // If NFT collection is not present in  NFT Catalog do not register
                 return
+            } else if (! await listedCollectionMetadataService.doesLCMDExists(collectionId)) {
+                await listedCollectionMetadataService.createLCMD(getCreateLCMDtoFromCollectionViewData(collectionViewData))
             }
-
-            // TODO: Can add functionality to add ListedCollectionMetadata from the above api
-            // Avoiding refetching on client side
 
             if (bannedCollections.includes(collectionId)) {
                 return;

@@ -1,5 +1,5 @@
 import { Job } from "bullmq";
-import { CreateDeListedEventDto, CreateSaleEventDto, ListedCollectionService, MarketEventService, Prisma, PrismaClient, RemoveListingFromSale } from "scanner-store";
+import { CreateDeListedEventDto, CreateSaleEventDto, ListedCollectionMetadataService, ListedCollectionService, MarketEventService, Prisma, PrismaClient, RemoveListingFromSale, getCreateLCMDtoFromCollectionViewData } from "scanner-store";
 import { BaseJob, JobImp } from "./job.definition";
 import { FlowCapturedEvent, FlowNamedType } from "./types";
 import * as fcl from "@onflow/fcl";
@@ -165,10 +165,16 @@ export class ListingCompletedJob extends BaseJob implements JobImp {
             return;
         }
         
-        if ((await getCollectionView(collectionId)) === null) {
+        const listedCollectionMetadataService = new ListedCollectionMetadataService(prisma);
+        const collectionViewData = await getCollectionView(collectionId);
+
+        if (collectionViewData === null) {
             // If NFT collection is not present in  NFT Catalog do not register
             return
+        } else if (! await listedCollectionMetadataService.doesLCMDExists(collectionId)) {
+            await listedCollectionMetadataService.createLCMD(getCreateLCMDtoFromCollectionViewData(collectionViewData))
         }
+        
         try {
             const status  = await fcl.send([
                 await fcl.build([
