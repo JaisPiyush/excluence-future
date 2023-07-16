@@ -6,4 +6,6 @@ async function main() {
     console.log(`Job count data: ${JSON.stringify(jobCount)}`)
 }
 
-main().then()
+main().then(() => {
+    process.exit(0)
+})

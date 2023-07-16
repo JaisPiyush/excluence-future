@@ -24,5 +24,6 @@ export async function setupBullMQProcess(queueName = defaultQueueName) {
         await defaultQueue.drain();
         Logger.info(`Drained queue`)
     }
-    await defaultWorker(queueName, prisma);
+    return await defaultWorker(queueName, prisma);
+    
 }

@@ -1,14 +1,13 @@
 import {FlowScanner} from '@rayvin-flow/flow-scanner-lib'
 import {ConfigProvider} from '@rayvin-flow/flow-scanner-lib/lib/providers/config-provider'
 import { FlowAccessNode, flowNetworkConfigs } from '../config'
-import {MemorySettingsService} from '@rayvin-flow/flow-scanner-lib/lib/settings/memory-settings-service'
-import { getEventName, getEvents } from './events'
+import { getEventName } from './events'
 import { Logger } from 'logger'
-import { createQueue, setupBullMQProcess } from 'steward'
+import { setupBullMQProcess } from 'steward'
 import { QueueEventBroadcaster } from './event-broadcaster'
 import { StoreService, getPrismaClient } from 'scanner-store'
 import { PrismaDBSettingService } from './db-settings-service'
-import { getFormattedQueueName, getQueueName } from './queue'
+import { getQueueName } from './queue'
 import { logger } from './logger'
 
 const flowNetwork = process.env['NEXT_PUBLIC_FLOW_NETWORK'] || FlowAccessNode.Mainnet;
@@ -26,7 +25,7 @@ export const main = async () => {
 
     const storeService = new StoreService(prisma);
     const flowEvents = await storeService.findAllStoreEvents();
-
+    const worker = await setupBullMQProcess(getQueueName());
     const flowScanners = await Promise.all(flowEvents.map( async (flowStore) => {
         Logger.info(`Scanner for store ${flowStore.address} is starting!`)
         const configProvider: ConfigProvider = () => ({
@@ -51,12 +50,14 @@ export const main = async () => {
                 configProvider: configProvider,
                 eventBroadcasterProvider: async () => eventBroadcaster,
                 settingsServiceProvider: async () => settingsService,
-                logProvider: logger
+                logProvider: logger,
             }
         );
         await settingsService.initProcessedHeight(configProvider().defaultStartBlockHeight || 0)
-        await setupBullMQProcess(getQueueName());
+        
+   
         await flowScanner.start();
+       
         return flowScanner;
     }));
 
@@ -89,5 +90,7 @@ export const main = async () => {
     await Promise.all(flowScanners.map( async (flowScanner) => {
         return await flowScanner.stop();
     }));
+    Logger.info('Closing worker: ' + worker.id)
+    await worker.close();
 }
 

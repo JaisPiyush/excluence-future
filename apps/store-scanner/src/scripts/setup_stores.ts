@@ -28,4 +28,6 @@ async function setupStores() {
 }
 
 
-setupStores().then();
+setupStores().then(() => {
+    process.exit(0)
+});
