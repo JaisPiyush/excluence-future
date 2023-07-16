@@ -49,4 +49,5 @@ export const defaultWorker = (queueName: string, prisma: PrismaClient) => {
         }
         Logger.error(`${job.id} has failed`);
     })
+    Logger.info(`Started a worker for queue ${queueName} worker: ${worker.id}`)
 }

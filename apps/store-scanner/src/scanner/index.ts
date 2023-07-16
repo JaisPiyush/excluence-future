@@ -32,7 +32,7 @@ export const main = async () => {
         const configProvider: ConfigProvider = () => ({
             defaultStartBlockHeight: Number(flowStore.startBlockHeight), // this is the block height that the scanner will start from on the very first run
             flowAccessNode: flowNetworkConfigs[flowNetwork as FlowAccessNode],
-            maxFlowRequestsPerSecond: 5
+            maxFlowRequestsPerSecond: 5,
         })
         const settingsService = new PrismaDBSettingService(
             `${flowNetwork}_${flowStore.address}`,
@@ -45,7 +45,7 @@ export const main = async () => {
 
         const flowScanner = new FlowScanner(
             // event types to monitor
-            flowStore.StoreEvents.map((event) => getEventName(event)),
+            events,
             // pass in the configured providers
             {
                 configProvider: configProvider,

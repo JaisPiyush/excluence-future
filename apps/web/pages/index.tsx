@@ -9,9 +9,6 @@ export default function Home() {
 
   const [tabIndex, setTabIndex] = useState(0)
 
-  getCollectionView('A.d0bcefdf1e67ea85.HWGarageCardV2').then((rs) => {
-    console.log(rs)
-  })
 
   return (
     <>

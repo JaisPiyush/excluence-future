@@ -42,6 +42,8 @@ export class AddListingJob extends BaseJob implements JobImp {
             const listedCollectionMetadataService = new ListedCollectionMetadataService(prisma);
             const collectionViewData = await getCollectionView(collectionId);
 
+            Logger.info(`Working on collection ${collectionId}, ${collectionViewData}`)
+
             if (collectionViewData === null) {
                 // If NFT collection is not present in  NFT Catalog do not register
                 return

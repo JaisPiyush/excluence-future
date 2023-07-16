@@ -10,6 +10,8 @@ export type SuspenseWrapperResponse<T> = {read: () => T};
 
 export interface MarketCollectionRow {
     collectionId: string;
+    collectionName: string;
+    squareImage: string;
     avgSalePrice: number;
     volume: number;
     sales: number;

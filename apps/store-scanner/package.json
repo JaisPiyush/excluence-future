@@ -18,6 +18,7 @@
   },
   "scripts": {
     "start": "ts-node src/index.ts",
-    "run:setup_account": "ts-node src/scripts/setup_stores.ts"
+    "run:setup_account": "ts-node src/scripts/setup_stores.ts",
+    "run:get_job_count": "ts-node src/scripts/get_job_count.ts"
   }
 }
