@@ -1,3 +1,5 @@
+import { getBasketballsEditions } from '@/cadence/script/get_basketballs_editions_data'
+import { getCollectionData } from '@/cadence/script/get_collection_view'
 import Market from '@/modules/Market'
 import { Box, Tab, Tabs } from '@mui/material'
 import Head from 'next/head'
@@ -7,6 +9,11 @@ import { useState } from 'react'
 export default function Home() {
 
   const [tabIndex, setTabIndex] = useState(0)
+
+  getBasketballsEditions().then((rs) => {
+    console.log(rs)
+  })
+
   return (
     <>
       <Head>

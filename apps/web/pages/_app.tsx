@@ -23,6 +23,9 @@ fcl.config({
   "discovery.wallet": "https://fcl-discovery.onflow.org/testnet/authn",
   "env": process.env['NEXT_PUBLIC_FLOW_NETWORK'],
   "app.detail.title": "Excluence",
+  "0xMetadataViews": "0x1d7e57aa55817448",
+  "0xViewResolver": "0x1d7e57aa55817448"
+
 });
 
 const clientSideEmotionCache = createEmotionCache();

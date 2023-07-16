@@ -51,7 +51,7 @@ export const main = async () => {
                 configProvider: configProvider,
                 eventBroadcasterProvider: async () => eventBroadcaster,
                 settingsServiceProvider: async () => settingsService,
-                // logProvider: logger
+                logProvider: logger
             }
         );
         await settingsService.initProcessedHeight(configProvider().defaultStartBlockHeight || 0)
@@ -71,6 +71,16 @@ export const main = async () => {
         process.on('SIGINT', () => {
             Logger.info('Received SIGINT')
             resolve()
+        })
+
+        process.on('uncaughtException', (e) => {
+            Logger.error(e);
+            resolve();
+        });
+
+        process.on('unhandledRejection', (e) => {
+            Logger.error(e);
+            resolve();
         })
     })
 

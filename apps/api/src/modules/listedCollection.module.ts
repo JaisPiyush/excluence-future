@@ -5,6 +5,7 @@ import { Request, ResponseToolkit, Server, ServerApplicationState } from "@hapi/
 export class ListedCollectionAPIModule extends BaseApiModule {
 
     private readonly listedCollectionService: ListedCollectionService;
+    
 
     constructor(public readonly prisma: PrismaClient) {
         super(prisma);

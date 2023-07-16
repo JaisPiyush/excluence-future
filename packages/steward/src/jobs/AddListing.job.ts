@@ -5,6 +5,7 @@ import { CreateListingDto, ListedCollectionService, MarketEventService, Prisma, 
 import { getContractId } from "./utils";
 import { Logger } from "logger";
 import { getUTCTime, stringToBigInt } from "../utils";
+import { bannedCollections } from "./banned-collections";
 
 interface AddListingData {
     storefrontAddress: string;
@@ -31,6 +32,11 @@ export class AddListingJob extends BaseJob implements JobImp {
         if(!prisma) throw new Error("Prisma client muse be defined.");
         try {
             const data = this.payload as any as FlowCapturedEvent<AddListingData>;
+
+            if (bannedCollections.includes(getContractId(data.data.nftType.typeID))) {
+                return;
+            }
+
             const listedCollectionService = new ListedCollectionService(prisma);
             const marketEventService = new MarketEventService(prisma);
             const nftType = data.data.nftType.typeID as string;

@@ -67,13 +67,37 @@ export class MarketEventService {
         });
     }
 
-    // async getTrendingCollections() {
-    //     return await this.prisma.marketEvent.aggregate({
-    //         _count: {
-    //             purchased: true,
-    //         }
-    //     })
-    // }
+    async getTrendingCollectionData() {
+        const collection = await this.prisma.marketEvent.groupBy({
+            by: ['collectionId'],
+            where: {
+                purchased: true
+            },
+            _avg: {
+                salePrice: true
+            },
+            _sum: {
+                salePrice: true
+            },
+            _count: {
+                nftID: true
+            }
+        });
+
+
+        return collection.map((data) => {
+            return {
+                ...data,
+                _avg: {
+                    salePrice: Number(data._avg.salePrice) / Math.pow(10,8)
+                },
+                _sum: {
+                    salePrice: Number(data._sum.salePrice) / Math.pow(10, 8)
+                }
+            }
+        })
+    }
+
 
 
 }

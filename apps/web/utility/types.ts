@@ -7,3 +7,10 @@ export interface FlowAccount extends Record<string, unknown> {
 }
 
 export type SuspenseWrapperResponse<T> = {read: () => T};
+
+export interface MarketCollectionRow {
+    collectionId: string;
+    avgSalePrice: number;
+    volume: number;
+    sales: number;
+}

@@ -26,7 +26,7 @@ export class ListedCollectionService {
                     select: {
                         MarketEvents: true
                     }
-                }
+                },
             }
         })
     }
