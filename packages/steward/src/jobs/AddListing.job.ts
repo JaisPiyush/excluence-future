@@ -6,6 +6,7 @@ import { getContractId } from "./utils";
 import { Logger } from "logger";
 import { getUTCTime, stringToBigInt } from "../utils";
 import { bannedCollections } from "./banned-collections";
+import {getCollectionView} from "flow-dock/src/script/get_collection_view"
 
 interface AddListingData {
     storefrontAddress: string;
@@ -32,15 +33,25 @@ export class AddListingJob extends BaseJob implements JobImp {
         if(!prisma) throw new Error("Prisma client muse be defined.");
         try {
             const data = this.payload as any as FlowCapturedEvent<AddListingData>;
-
-            if (bannedCollections.includes(getContractId(data.data.nftType.typeID))) {
-                return;
-            }
-
             const listedCollectionService = new ListedCollectionService(prisma);
             const marketEventService = new MarketEventService(prisma);
             const nftType = data.data.nftType.typeID as string;
             const collectionId = getContractId(nftType);
+
+            if ((await getCollectionView(collectionId)) === null) {
+                // If NFT collection is not present in  NFT Catalog do not register
+                return
+            }
+
+            // TODO: Can add functionality to add ListedCollectionMetadata from the above api
+            // Avoiding refetching on client side
+
+            if (bannedCollections.includes(collectionId)) {
+                return;
+            }
+
+            
+           
             let listedCollection = await listedCollectionService.findListedCollection(collectionId);
             
             if (listedCollection === null) {

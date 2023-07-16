@@ -7,6 +7,7 @@ import { getContractId } from "./utils";
 import { Logger } from "logger";
 import { getUTCTime, stringToBigInt } from "../utils";
 import { bannedCollections } from "./banned-collections";
+import { getCollectionView } from "flow-dock/src/script/get_collection_view";
 
 interface ListingCompletedData {
     listingResourceID: number;
@@ -152,11 +153,22 @@ export class ListingCompletedJob extends BaseJob implements JobImp {
 
     handle = async (job?: Job<FlowCapturedEvent<ListingCompletedData>>, prisma?: PrismaClient) => {
         if(!prisma) throw new Error("Prisma client muse be defined.");
+        
         const data = this.payload as any as FlowCapturedEvent<ListingCompletedData>;
-        if (bannedCollections.includes(getContractId(data.data.nftType.typeID))) {
+        const collectionId = getContractId(data.data.nftType.typeID);
+        const storeId = getContractId(data.type);
+        
+        const listedCollectionService = new ListedCollectionService(prisma);
+        const marketEventService = new MarketEventService(prisma);
+
+        if (bannedCollections.includes(collectionId)) {
             return;
         }
         
+        if ((await getCollectionView(collectionId)) === null) {
+            // If NFT collection is not present in  NFT Catalog do not register
+            return
+        }
         try {
             const status  = await fcl.send([
                 await fcl.build([
@@ -167,11 +179,7 @@ export class ListingCompletedJob extends BaseJob implements JobImp {
      
             const transferEvents = this.findWithdrawAndDepositEvent(getContractId(data.data.nftType.typeID), status.events);
 
-            const collectionId = getContractId(data.data.nftType.typeID);
-            const storeId = getContractId(data.type);
-        
-            const listedCollectionService = new ListedCollectionService(prisma);
-            const marketEventService = new MarketEventService(prisma);
+            
 
             if((await listedCollectionService.findListedCollection(collectionId)) === null) {
                 await listedCollectionService.createListedCollection(collectionId);

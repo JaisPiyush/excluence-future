@@ -1,5 +1,4 @@
-import { getBasketballsEditions } from '@/cadence/script/get_basketballs_editions_data'
-import { getCollectionData } from '@/cadence/script/get_collection_view'
+import {getCollectionView} from "flow-dock/src/script/get_collection_view"
 import Market from '@/modules/Market'
 import { Box, Tab, Tabs } from '@mui/material'
 import Head from 'next/head'
@@ -10,7 +9,7 @@ export default function Home() {
 
   const [tabIndex, setTabIndex] = useState(0)
 
-  getBasketballsEditions().then((rs) => {
+  getCollectionView('A.d0bcefdf1e67ea85.HWGarageCardV2').then((rs) => {
     console.log(rs)
   })
 

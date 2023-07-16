@@ -3,6 +3,9 @@
 
 const nextConfig = {
   reactStrictMode: true,
+  transpilePackages: [
+    "flow-dock"
+  ],
   webpack: (
     config,
     { buildId, dev, isServer, defaultLoaders, nextRuntime, webpack }
