@@ -28,7 +28,11 @@ export class StoreService {
     }
 
     async findAll() {
-        return await this.prisma.store.findMany();
+        return await this.prisma.store.findMany({
+            include: {
+                StoreEvents: true
+            }
+        });
     }
 
     async findStoreByAddress(address: string) {

@@ -17,6 +17,10 @@ export class BaseJob {
         throw new Error("Method not implemented")
     }
 
+    preDataTransform(data: FlowCapturedEvent): FlowCapturedEvent {
+        return data;
+    }
+
     failed = async (job?: Job): Promise<void> => {
         Logger.error(`Job(${this.name}) with ID: ${job?.id} has failed`)
     }

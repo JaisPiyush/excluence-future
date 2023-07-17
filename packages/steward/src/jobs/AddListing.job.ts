@@ -8,7 +8,7 @@ import { getUTCTime, stringToBigInt } from "../utils";
 import { bannedCollections } from "./banned-collections";
 import {getCollectionView} from "flow-dock/src/script/get_collection_view"
 
-interface AddListingData {
+export interface AddListingData {
     storefrontAddress: string;
     listingResourceID: number;
     nftType: FlowNamedType,
@@ -29,10 +29,12 @@ export class AddListingJob extends BaseJob implements JobImp {
         return await listedCollectionService.createListedCollection(collectionId);
     }
 
-    handle = async (job?: Job<FlowCapturedEvent<AddListingData>>, prisma?: PrismaClient) => {
+    handle = async (job?: Job<FlowCapturedEvent>, prisma?: PrismaClient) => {
         if(!prisma) throw new Error("Prisma client muse be defined.");
         try {
-            const data = this.payload as any as FlowCapturedEvent<AddListingData>;
+            const data = this.preDataTransform(this.payload as any as FlowCapturedEvent) as FlowCapturedEvent<AddListingData>;
+            
+            
             const listedCollectionService = new ListedCollectionService(prisma);
             const marketEventService = new MarketEventService(prisma);
             
@@ -101,7 +103,7 @@ export class AddListingJob extends BaseJob implements JobImp {
                 // P2022: Unique constraint failed
                 Logger.info(`Listing already exists.`)
             }else{
-                Logger.error(`AddListingJobException: ${e}`);
+                Logger.error(`${this.name}: ${e}`);
             }
         }
     }

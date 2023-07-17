@@ -1,6 +1,7 @@
-import { PrismaClient, StoreService } from "scanner-store";
+import { CreateStoreWithEventsDto, PrismaClient, StoreService } from "scanner-store";
 import { BaseApiModule } from "./base";
 import { Request, ResponseToolkit, Server, ServerApplicationState } from "@hapi/hapi";
+import { CreateStoreEventsDto } from "scanner-store/src/storeEvents/storeEvents.dto";
 
 export class StoreAPIModule extends BaseApiModule {
 
@@ -22,6 +23,12 @@ export class StoreAPIModule extends BaseApiModule {
             method: 'POST',
             path: '/store/height',
             handler: this.setHeightBlock
+        })
+
+        server.route({
+            method: 'POST',
+            path: '/store',
+            handler: this.createWithEvents
         })
     }
 
@@ -45,5 +52,12 @@ export class StoreAPIModule extends BaseApiModule {
             height
         )
         return res.response({data: 'done'}).code(201)
+    }
+
+    createWithEvents = async (req: Request, res: ResponseToolkit) => {
+        const payload  = req.payload as CreateStoreWithEventsDto;
+        const store = await this.storeService.createWithEvents(payload);
+        return res.response({data: store}).code(201)
+
     }
 }
