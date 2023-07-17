@@ -15,7 +15,8 @@
     "logger": "*",
     "qs": "^6.11.2",
     "scanner-store": "*",
-    "steward": "*"
+    "steward": "*",
+    "flow-dock": "*"
   },
   "scripts": {
     "run": "ts-node src/index.ts",

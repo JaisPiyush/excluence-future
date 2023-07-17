@@ -113,6 +113,7 @@ model CollectionNFTOwners {
   collectionId String
   nftID        BigInt
   owner        String
+  timestamp DateTime @default(now())
 }
 
 model NFTTrait {

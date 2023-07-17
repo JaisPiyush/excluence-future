@@ -44,12 +44,34 @@ export class IndexedCollectionNFTService {
                 },
                 CollectionNFTOwners: {
                     create: {
-                        owner: args.owner
+                        owner: args.owner,
+                        timestamp: args.timestamp
                     }
                 }
             }
         })
     }
+
+    async updateNFTOwner(collectionId: string, nftId: number, owner: string, timestamp: Date) {
+        return await this.prisma.collectionNFTOwners.create({
+            data: {
+                collectionId: collectionId,
+                nftID: nftId,
+                owner: owner,
+                timestamp
+            }
+        })
+    }
+
+    async hadIndexedNFT(collectionId: string, nftID: number) {
+        return (await this.prisma.indexedCollectionNFT.findFirst({
+            where: {
+                collectionId,
+                nftID
+            }
+        })) !== null;
+    }
+
 
     async findAllNFTInCollection(collectionId: string) {
         return await this.prisma.indexedCollectionNFT.findMany({

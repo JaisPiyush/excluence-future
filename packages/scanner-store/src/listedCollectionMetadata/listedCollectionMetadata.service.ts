@@ -10,6 +10,14 @@ export class ListedCollectionMetadataService {
         });
     }
 
+    async getLCMD(collectionId: string) {
+        return await this.prisma.listedCollectionMetadata.findFirst({
+            where: {
+                collectionId
+            }
+        })
+    }
+
     async doesLCMDExists(collectionId: string) {
         return (await this.prisma.listedCollectionMetadata.findFirst({
             where: {

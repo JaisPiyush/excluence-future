@@ -1,5 +1,6 @@
 import { ClassConstructor } from "class-transformer";
 import { AddListingJob } from "steward/src/jobs/AddListing.job";
+import { CollectionJob } from "steward/src/jobs/Collection/Collection.job";
 import {ListingCompletedJob} from "steward/src/jobs/ListingCompleted.job";
 
 interface StoreEventData {
@@ -28,7 +29,8 @@ export const getEvents = () => {
 
 const eventNameJobHandlerMap = new Map<string, ClassConstructor<unknown>>([
     ["ListingAvailable",  AddListingJob],
-    ["ListingCompleted", ListingCompletedJob]
+    ["ListingCompleted", ListingCompletedJob],
+    ["Deposit", CollectionJob]
 
 ]);
 

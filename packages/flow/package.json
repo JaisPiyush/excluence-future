@@ -9,5 +9,8 @@
   },
   "dependencies": {
     "@onflow/fcl": "^1.4.1"
+  },
+  "scripts": {
+    "run:get_nft_views": "ts-node scripts/get_nft_views.ts"
   }
 }
