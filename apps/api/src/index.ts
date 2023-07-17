@@ -7,12 +7,14 @@ import { ListedCollectionAPIModule } from "./modules/listedCollection.module";
 import { StoreAPIModule } from "./modules/store.module";
 import { MarketAPIModule } from "./modules/market.module";
 import { IndexedCollectionNFT } from "./modules/indexedCollectionNFT.module";
+import { IndexedCollectionNFTAPIModule } from "./modules/indexableCollection.module";
 
 const modules: typeof BaseApiModule[] = [
     ListedCollectionAPIModule,
     StoreAPIModule,
     MarketAPIModule,
-    IndexedCollectionNFT
+    IndexedCollectionNFT,
+    IndexedCollectionNFTAPIModule
 ];
 
 const registerAllModules = (server: Server) => {
