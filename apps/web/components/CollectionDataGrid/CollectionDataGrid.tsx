@@ -1,6 +1,6 @@
 import { MarketCollectionRow } from "@/utility/types"
 import { Avatar, Box, Typography } from "@mui/material";
-import { DataGrid, GridColDef, GridRenderCellParams, GridValueFormatterParams } from "@mui/x-data-grid"
+import { DataGrid, GridColDef, GridRenderCellParams, GridValueFormatterParams, GridValueGetterParams } from "@mui/x-data-grid"
 
 interface CollectionDataGridProps {
     rows: MarketCollectionRow[]
@@ -8,14 +8,17 @@ interface CollectionDataGridProps {
 
 const columns: GridColDef<MarketCollectionRow>[] = [
     {
-        field: 'collection', 
+        field: 'id', 
         headerName: 'Collection', 
         minWidth: 150,
         flex: 1,
-        maxWidth: 400,
+        maxWidth: 500,
+        valueGetter: (params: GridValueGetterParams<MarketCollectionRow>) => {
+            return params.row.collectionId
+        },
         renderCell: (params: GridRenderCellParams<MarketCollectionRow>) => {
-            return <Box sx={{display: 'flex'}}>
-                <Avatar src={params.row.squareImage} />
+            return <Box sx={{display: 'flex', alignItems: 'center'}}>
+                <Avatar src={params.row.squareImage} sx={{marginRight: '0.5rem'}} />
                 <Typography>{params.row.collectionName}</Typography>
             </Box>
         },
@@ -23,7 +26,7 @@ const columns: GridColDef<MarketCollectionRow>[] = [
     
     },
     {
-        field: 'avgSalePrice',
+        field: 'avgprice',
         headerName: 'Avg. Price',
         maxWidth: 300,
         minWidth: 200,
@@ -42,8 +45,16 @@ const columns: GridColDef<MarketCollectionRow>[] = [
         disableColumnMenu: true
     },
     {
-        field: 'sales',
+        field: 'count',
         headerName: 'Sales',
+        maxWidth: 300,
+        minWidth: 200,
+        flex: 1,
+        disableColumnMenu: true
+    },
+    {
+        field: 'listings',
+        headerName: 'Listings',
         maxWidth: 300,
         minWidth: 200,
         flex: 1,
@@ -52,10 +63,11 @@ const columns: GridColDef<MarketCollectionRow>[] = [
 ];
 
 export default function CollectionDataGrid(props: CollectionDataGridProps) {
-    return <Box sx={{width: '100%', height: '60vh', maxHeight: '100%'}}>
+    return <Box sx={{width: '100%', height: '70vh', maxHeight: '100%'}}>
         <DataGrid 
             rows={props.rows}
             columns={columns}
+            getRowId={(row) => row.collectionId}
             disableRowSelectionOnClick
             
         />

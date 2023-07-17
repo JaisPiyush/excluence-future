@@ -9,6 +9,9 @@ import { StoreService, getPrismaClient } from 'scanner-store'
 import { PrismaDBSettingService } from './db-settings-service'
 import { getQueueName } from './queue'
 import { logger } from './logger'
+import {MemorySettingsService} from "@rayvin-flow/flow-scanner-lib/lib/settings/memory-settings-service"
+import { EventScanner } from '@rayvin-flow/flow-scanner-lib/lib/scanner/event-scanner'
+import {EventPayloads} from "@rayvin-flow/flow-scanner-lib/lib/event-bus/events"
 
 const flowNetwork = process.env['NEXT_PUBLIC_FLOW_NETWORK'] || FlowAccessNode.Mainnet;
 
@@ -21,6 +24,7 @@ const eventBroadcaster = new QueueEventBroadcaster();
 
 
 
+
 export const main = async () => {
 
     const storeService = new StoreService(prisma);
@@ -28,6 +32,7 @@ export const main = async () => {
     const worker = await setupBullMQProcess(getQueueName());
     const flowScanners = await Promise.all(flowEvents.map( async (flowStore) => {
         Logger.info(`Scanner for store ${flowStore.address} is starting!`)
+        
         const configProvider: ConfigProvider = () => ({
             defaultStartBlockHeight: Number(flowStore.startBlockHeight), // this is the block height that the scanner will start from on the very first run
             flowAccessNode: flowNetworkConfigs[flowNetwork as FlowAccessNode],
@@ -38,6 +43,8 @@ export const main = async () => {
             prisma,
             true
         );
+
+        // const settingsService = new MemorySettingsService()
 
         const events = flowStore.StoreEvents.map((event) => getEventName(event))
         // console.log(events)
@@ -51,9 +58,10 @@ export const main = async () => {
                 eventBroadcasterProvider: async () => eventBroadcaster,
                 settingsServiceProvider: async () => settingsService,
                 logProvider: logger,
+                
             }
         );
-        await settingsService.initProcessedHeight(configProvider().defaultStartBlockHeight || 0)
+        // await settingsService.initProcessedHeight(configProvider().defaultStartBlockHeight || 0)
         
    
         await flowScanner.start();
@@ -92,5 +100,6 @@ export const main = async () => {
     }));
     Logger.info('Closing worker: ' + worker.id)
     await worker.close();
+    process.exit(0)
 }
 

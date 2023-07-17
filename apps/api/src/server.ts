@@ -12,5 +12,10 @@ export const server =  Hapi.server({
     },
     router: {
         stripTrailingSlash: true
+    },
+    routes: {
+        cors: {
+            origin: ['*']
+        }
     }
 });

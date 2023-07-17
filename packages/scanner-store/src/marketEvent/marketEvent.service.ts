@@ -1,5 +1,5 @@
 import { PrismaClient, MarketEventType, Prisma } from "@prisma/client";
-import { CheckListingExistsArgs, CreateDeListedEventDto, CreateListingDto, CreateSaleEventDto,RemoveListingFromSale } from "./marketEvent.dto";
+import { CheckListingExistsArgs, CreateDeListedEventDto, CreateListingDto, CreateSaleEventDto,RemoveListingFromSale, TrendingCollectionDto } from "./marketEvent.dto";
 
 export class MarketEventService {
     constructor(public readonly prisma: PrismaClient) {}
@@ -67,35 +67,30 @@ export class MarketEventService {
         });
     }
 
-    async getTrendingCollectionData() {
-        const collection = await this.prisma.marketEvent.groupBy({
-            by: ['collectionId'],
-            where: {
-                purchased: true
-            },
-            _avg: {
-                salePrice: true
-            },
-            _sum: {
-                salePrice: true
-            },
-            _count: {
-                nftID: true
-            }
-        });
-
-
-        return collection.map((data) => {
-            return {
-                ...data,
-                _avg: {
-                    salePrice: Number(data._avg.salePrice) / Math.pow(10,8)
-                },
-                _sum: {
-                    salePrice: Number(data._sum.salePrice) / Math.pow(10, 8)
-                }
-            }
-        })
+    async getTrendingCollectionData(): Promise<TrendingCollectionDto[]> {
+       try {
+            return await this.prisma.$queryRaw`SELECT "squareImage", "collectionName", n.*
+                FROM "ListedCollectionMetadata"
+                LEFT JOIN
+                (
+                SELECT "MarketEvent"."collectionId", 
+                AVG(CASE WHEN "eventType" = 'Sale' THEN "salePrice" ELSE NULL END)/POWER(10,8) AS avgPrice, 
+                SUM(CASE WHEN "eventType" = 'Sale' THEN "salePrice" ELSE NULL END)/POWER(10,8) AS volume, 
+                COUNT(CASE WHEN "eventType" = 'Listing' THEN 1 ELSE NULL END ) as listings, 
+                COUNT(CASE WHEN "eventType" = 'Sale' THEN 1 ELSE NULL END), 
+                DATE_TRUNC('day', timestamp) as date_trunc
+                FROM "MarketEvent"
+                GROUP BY "MarketEvent"."collectionId", date_trunc
+                ) n
+                ON "ListedCollectionMetadata"."collectionId" = n."collectionId"
+                AND n.date_trunc = current_date - interval '2' day
+                ORDER BY n.date_trunc DESC
+                ;`;
+            
+       }catch(e) {
+            console.log(e)
+            return []
+       }
     }
 
 

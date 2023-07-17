@@ -19,7 +19,16 @@ export class MarketAPIModule extends BaseApiModule {
     }
 
     getTrendingCollectionData = async (req: Request, res: ResponseToolkit) => {
-        const trendingCollection = await this.marketEventService.getTrendingCollectionData();
+        const trendingCollection = (await this.marketEventService.getTrendingCollectionData()).map((collection) => {
+            return {
+                ...collection,
+                avgprice: collection.avgprice ? Number(collection.avgprice) : 0,
+                volume: collection.volume ? Number(collection.volume) : 0,
+                listings: collection.listings ? Number(collection.listings) : 0,
+                count: collection.count ? Number(collection.count) : 0
+            }
+        })
+        
         return res.response({data: trendingCollection}).code(200)
     }
 }

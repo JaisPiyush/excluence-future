@@ -44,3 +44,12 @@ export interface CreateSaleEventDto {
 
 export type CreateDeListedEventDto = Omit<CreateSaleEventDto, "nftBuyer" | "nftSeller">;
 
+export interface TrendingCollectionDto {
+    squareImage: string;
+    collectionName: string;
+    avgprice: number | bigint | null;
+    volume: number | bigint | null;
+    listings: number | bigint | null;
+    count: number | bigint | null;
+    date_trunc: string
+}

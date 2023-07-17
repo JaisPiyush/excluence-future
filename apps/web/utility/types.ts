@@ -12,7 +12,9 @@ export interface MarketCollectionRow {
     collectionId: string;
     collectionName: string;
     squareImage: string;
-    avgSalePrice: number;
+    avgprice: number;
     volume: number;
-    sales: number;
+    listings: number,
+    count: number,
+    date_trunc: string
 }
