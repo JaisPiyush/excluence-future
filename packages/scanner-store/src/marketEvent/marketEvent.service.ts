@@ -69,7 +69,9 @@ export class MarketEventService {
 
     async getTrendingCollectionData(): Promise<TrendingCollectionDto[]> {
        try {
-            return await this.prisma.$queryRaw`SELECT "squareImage", "collectionName", n.*
+            return await this.prisma.$queryRaw`SELECT "squareImage", "collectionName", n.*,
+                lag(n.volume,1, 0) OVER (PARTITION BY n."collectionId" ORDER BY n.date_trunc) as volume_chg,
+                lag(n.count,1, 0) OVER (PARTITION BY n."collectionId" ORDER BY n.date_trunc) as sales_chg
                 FROM "ListedCollectionMetadata"
                 LEFT JOIN
                 (
@@ -83,7 +85,7 @@ export class MarketEventService {
                 GROUP BY "MarketEvent"."collectionId", date_trunc
                 ) n
                 ON "ListedCollectionMetadata"."collectionId" = n."collectionId"
-                AND n.date_trunc = current_date - interval '2' day
+                AND n.date_trunc >= current_date - interval '7' day
                 ORDER BY n.date_trunc DESC
                 ;`;
             

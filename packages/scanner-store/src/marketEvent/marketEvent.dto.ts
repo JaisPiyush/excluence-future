@@ -51,5 +51,7 @@ export interface TrendingCollectionDto {
     volume: number | bigint | null;
     listings: number | bigint | null;
     count: number | bigint | null;
-    date_trunc: string
+    date_trunc: string;
+    volume_chg: number;
+    sales_chg: number;
 }
