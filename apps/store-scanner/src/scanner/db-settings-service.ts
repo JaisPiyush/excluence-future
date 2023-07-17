@@ -1,4 +1,4 @@
-import { SettingsServiceInterface } from '@rayvin-flow/flow-scanner-lib/lib/settings/settings-service';
+import { SettingsServiceInterface } from 'flow-scanner-lib/lib/settings/settings-service';
 import {getPrismaClient, StoreScannerConfigService, PrismaClient} from "scanner-store"
 export class PrismaDBSettingService implements SettingsServiceInterface {
     

@@ -1,5 +1,5 @@
-import {FlowScanner} from '@rayvin-flow/flow-scanner-lib'
-import {ConfigProvider} from '@rayvin-flow/flow-scanner-lib/lib/providers/config-provider'
+import {FlowScanner} from 'flow-scanner-lib'
+import {ConfigProvider} from 'flow-scanner-lib/lib/providers/config-provider'
 import { FlowAccessNode, flowNetworkConfigs } from '../config'
 import { getEventName } from './events'
 import { Logger } from 'logger'

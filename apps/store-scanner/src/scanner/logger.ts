@@ -1,4 +1,4 @@
-import { LogProvider  } from "@rayvin-flow/flow-scanner-lib/lib/providers/log-provider";
+import { LogProvider  } from "flow-scanner-lib/lib/providers/log-provider";
 import {Logger} from "logger"
 
 export const logger: LogProvider = () => {

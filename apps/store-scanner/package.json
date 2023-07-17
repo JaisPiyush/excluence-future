@@ -17,7 +17,8 @@
     "class-transformer": "^0.5.1",
     "logger": "*",
     "scanner-store": "*",
-    "steward": "*"
+    "steward": "*",
+    "flow-scanner-lib": "*"
   },
   "scripts": {
     "start": "ts-node src/index.ts",

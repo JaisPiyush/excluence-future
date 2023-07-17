@@ -1,5 +1,5 @@
-import { EventBroadcasterInterface } from "@rayvin-flow/flow-scanner-lib/lib/broadcaster/event-broadcaster";
-import { FlowEvent } from "@rayvin-flow/flow-scanner-lib/lib/flow/models/flow-event";
+import { EventBroadcasterInterface } from "flow-scanner-lib/lib/broadcaster/event-broadcaster";
+import { FlowEvent } from "flow-scanner-lib/lib/flow/models/flow-event";
 import { getEventJobHandler } from "./events";
 import { Logger } from "logger";
 import { getQueue } from "./queue";
