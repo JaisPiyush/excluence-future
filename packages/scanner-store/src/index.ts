@@ -20,6 +20,10 @@ export * from "./listedCollection/listedCollection.service";
 export * from "./listedCollectionMetadata/listedCollectionMetadata.service";
 export * from "./listedCollectionMetadata/listedCollectionMetadata.dto"
 
+export * from "./indexableCollection/indexableCollection.service";
+export * from "./indexedCollectionNFT/indexedCollectionNFT.dto";
+export * from "./indexedCollectionNFT/indexedCollectionNFT.service"
+
 export function getPrismaClient() {
     return new PrismaClient();
 }

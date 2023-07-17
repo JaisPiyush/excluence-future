@@ -13,11 +13,11 @@ datasource db {
 model Store {
   version          Int
   // Complete address A.{address}.{contractName}
-  address          String @id
+  address          String  @id
   storagePath      String
   publicPath       String
-  startBlockHeight BigInt @default(0)
-  isActive  Boolean @default(true)
+  startBlockHeight BigInt  @default(0)
+  isActive         Boolean @default(true)
 
   MarketEvents MarketEvent[]
   StoreEvents  StoreEvents[]
@@ -91,4 +91,46 @@ model MarketEvent {
 model StoreScannerConfig {
   scannerId   String @id
   blockHeight String
+}
+
+model IndexableCollection {
+  address          String @id
+  startBlockHeight BigInt
+}
+
+model IndexedCollectionNFT {
+  collectionId        String
+  nftID               BigInt
+  CollectionNFTOwners CollectionNFTOwners[]
+  NFTTraitAndNFT      NFTTraitAndNFT[]
+
+  @@id([collectionId, nftID])
+}
+
+model CollectionNFTOwners {
+  id           Int                  @id @default(autoincrement())
+  nft          IndexedCollectionNFT @relation(fields: [collectionId, nftID], references: [collectionId, nftID])
+  collectionId String
+  nftID        BigInt
+  owner        String
+}
+
+model NFTTrait {
+  name           String
+  value          String
+
+  NFTTraitAndNFT NFTTraitAndNFT[]
+
+  @@id([name, value])
+}
+
+model NFTTraitAndNFT {
+  nft          IndexedCollectionNFT @relation(fields: [collectionId, nftID], references: [collectionId, nftID])
+  collectionId String
+  nftID        BigInt
+  trait        NFTTrait             @relation(fields: [traitName, traitValue], references: [name, value])
+  traitName String
+  traitValue String
+
+  @@id([collectionId, nftID, traitName, traitValue])
 }
