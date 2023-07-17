@@ -32,7 +32,7 @@ export class AddListingJob extends BaseJob implements JobImp {
     handle = async (job?: Job<FlowCapturedEvent>, prisma?: PrismaClient) => {
         if(!prisma) throw new Error("Prisma client muse be defined.");
         try {
-            const data = this.preDataTransform(this.payload as any as FlowCapturedEvent) as FlowCapturedEvent<AddListingData>;
+            const data = await this.preDataTransform(this.payload as any as FlowCapturedEvent, prisma) as FlowCapturedEvent<AddListingData>;
             
             
             const listedCollectionService = new ListedCollectionService(prisma);

@@ -30,6 +30,11 @@ export class StoreAPIModule extends BaseApiModule {
             path: '/store',
             handler: this.createWithEvents
         })
+        server.route({
+            method: 'POST',
+            path: '/store/isActive',
+            handler: this.setIsActive
+        })
     }
 
     getAllStore = async (req: Request, res: ResponseToolkit) => {
@@ -59,5 +64,11 @@ export class StoreAPIModule extends BaseApiModule {
         const store = await this.storeService.createWithEvents(payload);
         return res.response({data: store}).code(201)
 
+    }
+
+    setIsActive = async (req: Request, res: ResponseToolkit) => {
+        const payload = (req.payload as any) as {address: string, isActive: boolean}
+        await this.storeService.updateIsActiveOfStore(payload.address, payload.isActive)
+        return res.response({data: 'done'}).code(201)
     }
 }

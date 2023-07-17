@@ -43,6 +43,17 @@ export class StoreService {
         })
     }
 
+    async updateIsActiveOfStore(address: string, isActive: boolean) {
+        return await this.prisma.store.update({
+            where: {
+                address
+            },
+            data: {
+                isActive: isActive
+            }
+        })
+    }
+
     async updateStoreStartHeightBlock(address: string, startBlockHeight: number) {
         return await this.prisma.store.update({
             where: {
@@ -56,6 +67,9 @@ export class StoreService {
 
     async findAllStoreEvents() {
         return await this.prisma.store.findMany({
+            where: {
+                isActive: true
+            },
             include: {
                 StoreEvents: {
                     select: {

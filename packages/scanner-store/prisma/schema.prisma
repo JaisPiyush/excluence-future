@@ -17,6 +17,7 @@ model Store {
   storagePath      String
   publicPath       String
   startBlockHeight BigInt @default(0)
+  isActive  Boolean @default(true)
 
   MarketEvents MarketEvent[]
   StoreEvents  StoreEvents[]

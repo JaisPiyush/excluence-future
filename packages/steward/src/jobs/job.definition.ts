@@ -17,7 +17,7 @@ export class BaseJob {
         throw new Error("Method not implemented")
     }
 
-    preDataTransform(data: FlowCapturedEvent): FlowCapturedEvent {
+    async preDataTransform(data: FlowCapturedEvent, prisma?: PrismaClient): Promise<FlowCapturedEvent> {
         return data;
     }
 

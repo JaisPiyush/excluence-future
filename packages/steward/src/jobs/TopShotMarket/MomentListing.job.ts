@@ -1,3 +1,4 @@
+import { PrismaClient } from "scanner-store";
 import { AddListingJob, AddListingData } from "../AddListing.job";
 
 import { FlowCapturedEvent } from "../types";
@@ -10,16 +11,19 @@ interface MomentListed {
 
 
 
-export class TopShotMomentListed extends AddListingJob {
+export class TopShotMomentListedJob extends AddListingJob {
 
     constructor(public payload: Record<string, unknown>) {
         super(payload);
     }
 
-   preDataTransform(_data: FlowCapturedEvent<MomentListed>): FlowCapturedEvent<AddListingData> {
+   async preDataTransform(_data: FlowCapturedEvent<MomentListed>, prisma?: PrismaClient): Promise<FlowCapturedEvent<AddListingData>> {
     
         const now  = new Date(Date.now())
         now.setFullYear(now.getFullYear() + 1)
+
+              
+
         const tfData: FlowCapturedEvent<AddListingData> =  {
                 ..._data,
                 data: {

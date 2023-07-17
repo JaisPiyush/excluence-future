@@ -9,7 +9,7 @@ import { getUTCTime, stringToBigInt } from "../utils";
 import { bannedCollections } from "./banned-collections";
 import { getCollectionView } from "flow-dock/src/script/get_collection_view";
 
-interface ListingCompletedData {
+export interface ListingCompletedData {
     listingResourceID: number;
     storefrontResourceID: number;
     purchased: boolean;
