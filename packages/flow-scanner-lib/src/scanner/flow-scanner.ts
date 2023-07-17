@@ -63,7 +63,7 @@ export class FlowScanner {
   private createEventScanners = async () => {
     for (const eventType of this.eventTypes) {
       this.fetchedEvents[eventType] = {}
-
+      
       const eventScanner = new EventScanner({
         processedBlockHeight: this.processedBlockHeight,
         latestBlockHeight: undefined,
@@ -77,6 +77,7 @@ export class FlowScanner {
 
       this.eventScanners.push(eventScanner)
     }
+
   }
 
   private startEventScanners = async () => {
@@ -128,6 +129,9 @@ export class FlowScanner {
 
   private onEventsFetched = (ev: EventPayloads.FlowEventsFetched) => {
     // store the fetched events for processing
+    if (! this.fetchedEvents[ev.eventType]) {
+      this.fetchedEvents[ev.eventType] = {}
+    }
     this.fetchedEvents[ev.eventType][String(ev.blockHeight)] = ev.events
   }
 
@@ -225,6 +229,7 @@ export class FlowScanner {
           }
 
           this.processedBlockHeight = checkBlockHeight
+          
           await settingsService.setProcessedBlockHeight(this.processedBlockHeight)
           eventBus.emit<EventPayloads.ProcessedBlockHeightUpdated>(EventType.ProcessedBlockHeightUpdated, { blockHeight: this.processedBlockHeight })
         }

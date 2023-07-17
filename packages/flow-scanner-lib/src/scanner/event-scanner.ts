@@ -112,13 +112,14 @@ export class EventScanner {
             let minErrors = 0
             let endHeight = startHeight + fetchSize - 1
             try {
-              logger.debug(`Fetching events: ${this.eventType} ${startHeight}-${endHeight} H`)
+              logger.debug(`Fetching events: ${this.eventType} ${startHeight}-${endHeight}`)
               const startRequestTime = new Date().getTime()
               const events = await flowService.getEvents(this.eventType, startHeight, endHeight)
               const endRequestTime = new Date().getTime()
 
               // group events by block height
               const groupedEvents: {[key: string]: FlowEvent[]} = _.groupBy(events, e => String(e.blockHeight))
+
 
               // FIXME: there is a potential issue here where we might request blocks past the current block height, or the access node we hit might
               //        be behind the blockchain. We don't know for sure if there were no events in a block or if the block did not exist yet. The Go

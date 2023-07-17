@@ -69,7 +69,7 @@ export class AddListingJob extends BaseJob implements JobImp {
             const doesListingExists = await marketEventService.doesListingExists({
                 collectionId: collectionId,
                 storeId: getContractId(data.type),
-                listingResourceId: data.data.listingResourceID
+                listingResourceId: Number(data.data.listingResourceID)
             });
             if (doesListingExists) {
                 Logger.info(`Duplicate event ${JSON.stringify({collectionId, storeId: getContractId(data.type), listingResourceId: data.data.listingResourceID})}`)
@@ -79,14 +79,14 @@ export class AddListingJob extends BaseJob implements JobImp {
             const createListingArgs: CreateListingDto = {
                 collectionId: collectionId,
                 nftType: nftType,
-                nftUUID: data.data.nftUUID,
-                nftID: data.data.nftID,
+                nftUUID: Number(data.data.nftUUID),
+                nftID: Number(data.data.nftID),
                 salePrice: stringToBigInt(data.data.salePrice),
                 salePaymentVaultType: data.data.salePaymentVaultType.typeID,
                 storeId: getContractId(data.type),
                 expiry: data.data.expiry,
                 timestamp: getUTCTime(data.blockTimestamp),
-                listingResourceId: data.data.listingResourceID,
+                listingResourceId: Number(data.data.listingResourceID),
                 blockHeight: data.blockHeight,
                 txnId: data.transactionId,
                 storeFrontAddress: data.data.storefrontAddress

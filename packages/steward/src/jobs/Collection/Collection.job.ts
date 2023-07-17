@@ -31,10 +31,10 @@ export class CollectionJob extends BaseJob implements JobImp {
             const listedCollectionMetadataService = new ListedCollectionMetadataService(prisma);
             const collectionId = getContractId(data.type);
 
-            if (await indexedCollectionService.hadIndexedNFT(collectionId, data.data.id)) {
+            if (await indexedCollectionService.hadIndexedNFT(collectionId, Number(data.data.id))) {
                 await indexedCollectionService.updateNFTOwner(
                     collectionId,
-                    data.data.id,
+                    Number(data.data.id),
                     data.data.to,
                     getUTCTime(data.blockTimestamp)
                 )
@@ -51,12 +51,12 @@ export class CollectionJob extends BaseJob implements JobImp {
             const traits = await getNFTTraits(
                 data.data.to,
                 collection?.publicPath as string,
-                data.data.id
+                Number(data.data.id)
             );
 
             await indexedCollectionService.create({
                 collectionId,
-                nftID: data.data.id,
+                nftID: Number(data.data.id),
                 owner: data.data.to,
                 timestamp: getUTCTime(data.blockTimestamp),
                 traits: traits.map((trait) => ({name: trait.name, value: trait.value}))

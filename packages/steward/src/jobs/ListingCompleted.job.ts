@@ -75,14 +75,14 @@ export class ListingCompletedJob extends BaseJob implements JobImp {
             collectionId,
             storeId,
             nftType: data.data.nftType.typeID,
-            nftUUID: data.data.nftUUID,
-            nftID: data.data.nftID,
+            nftUUID: Number(data.data.nftUUID),
+            nftID: Number(data.data.nftID),
             salePrice: stringToBigInt(data.data.salePrice),
             salePaymentVaultType: data.data.salePaymentVaultType.typeID,
             timestamp: getUTCTime(data.blockTimestamp),
             txnId: data.transactionId,
             blockHeight: data.blockHeight,
-            listingResourceId: data.data.listingResourceID,
+            listingResourceId: Number(data.data.listingResourceID),
             nftBuyer: (transferEvents[1].data as NFTDeposit).to,
             nftSeller: (transferEvents[0].data as NFTWithdraw).from
         };
@@ -104,7 +104,7 @@ export class ListingCompletedJob extends BaseJob implements JobImp {
     async removeListingFromSale(marketEventService: MarketEventService, args: RemoveListingFromSale) {
         const doesListingExists = await marketEventService.doesListingExists({
             collectionId: args.collectionId,
-            listingResourceId: args.listingResourceId,
+            listingResourceId: Number(args.listingResourceId),
             storeId: args.storeId,
             isListingActiveForSale: true
         });
@@ -126,14 +126,14 @@ export class ListingCompletedJob extends BaseJob implements JobImp {
             collectionId,
             storeId,
             nftType: data.data.nftType.typeID,
-            nftUUID: data.data.nftUUID,
-            nftID: data.data.nftID,
+            nftUUID: Number(data.data.nftUUID),
+            nftID: Number(data.data.nftID),
             salePrice: stringToBigInt(data.data.salePrice),
             salePaymentVaultType: data.data.salePaymentVaultType.typeID,
             timestamp: getUTCTime(data.blockTimestamp),
             txnId: data.transactionId,
             blockHeight: data.blockHeight,
-            listingResourceId: data.data.listingResourceID,
+            listingResourceId: Number(data.data.listingResourceID),
         };
 
         Logger.info(`Creating DeListed event: ${JSON.stringify(createDeListedArgs)}`);
