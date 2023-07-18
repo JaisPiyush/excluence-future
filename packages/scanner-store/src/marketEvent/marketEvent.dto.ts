@@ -55,3 +55,8 @@ export interface TrendingCollectionDto {
     volume_chg: number;
     sales_chg: number;
 }
+
+export enum Durations {
+    day = 'day',
+    hour = 'hour'
+}

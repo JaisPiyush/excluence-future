@@ -86,7 +86,7 @@ export class MarketEventService {
                 ) n
                 ON "ListedCollectionMetadata"."collectionId" = n."collectionId"
                 AND n.date_trunc >= current_date - interval '7' day
-                ORDER BY n.date_trunc DESC
+                ORDER BY n.date_trunc DESC, n.volume
                 ;`;
             
        }catch(e) {

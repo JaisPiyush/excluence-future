@@ -28,6 +28,6 @@ export default function Trending(props: TrendingProps) {
                     header="Trending Collections"
                     subheader={"Aggregated from multiple marketplaces"}
                 />
-                <CollectionDataGrid rows={rows}/>
+                <CollectionDataGrid rows={rows.filter((row) => row.volume > 0)}/>
             </Box>
 }

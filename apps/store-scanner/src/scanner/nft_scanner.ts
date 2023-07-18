@@ -27,25 +27,27 @@ export const main = async () => {
 
     const storeService = new StoreService(prisma);
     const indexableCollectionService = new IndexableCollectionService(prisma);
-    const flowEvents = await storeService.findAllStoreEvents();
     const worker = await setupBullMQProcess(getQueueName());
-    const flowScanners = await Promise.all(flowEvents.map( async (flowStore) => {
-        Logger.info(`Scanner for store ${flowStore.address} is starting!`)
+
+    const indexableCollections =  await indexableCollectionService.findAll();
+
+    const indexableCollectionsScanner = await Promise.all(indexableCollections.map(async (indexableCollection) => {
+        Logger.info(`Scanner for Collection ${indexableCollection.address}`)
         
         const configProvider: ConfigProvider = () => ({
-            defaultStartBlockHeight: Number(flowStore.startBlockHeight), // this is the block height that the scanner will start from on the very first run
+            defaultStartBlockHeight: Number(indexableCollection.startBlockHeight), // this is the block height that the scanner will start from on the very first run
             flowAccessNode: flowNetworkConfigs[flowNetwork as FlowAccessNode],
             maxFlowRequestsPerSecond: 5,
         })
         const settingsService = new PrismaDBSettingService(
-            `${flowNetwork}_${flowStore.address}`,
+            `${flowNetwork}_${indexableCollection.address}`,
             prisma,
             true
         );
 
         // const settingsService = new MemorySettingsService()
 
-        const events = flowStore.StoreEvents.map((event) => getEventName(event))
+        const events = [`${indexableCollection.address}.Deposit`]
         // console.log(events)
 
         const flowScanner = new FlowScanner(
@@ -66,9 +68,7 @@ export const main = async () => {
         await flowScanner.start();
        
         return flowScanner;
-    }));
-
-    
+    }))
 
     // wait for interrupt signal
     await new Promise<void>(resolve => {
@@ -96,7 +96,7 @@ export const main = async () => {
 
 
     Logger.info('Stopping scanner')
-    await Promise.all(flowScanners.map( async (flowScanner) => {
+    await Promise.all(indexableCollectionsScanner.map( async (flowScanner) => {
         return await flowScanner.stop();
     }));
     Logger.info('Closing worker: ' + worker.id)
@@ -104,3 +104,4 @@ export const main = async () => {
     process.exit(0)
 }
 
+main()

@@ -84,7 +84,7 @@ export class AddListingJob extends BaseJob implements JobImp {
                 salePrice: stringToBigInt(data.data.salePrice),
                 salePaymentVaultType: data.data.salePaymentVaultType.typeID,
                 storeId: getContractId(data.type),
-                expiry: data.data.expiry,
+                expiry: Number(data.data.expiry),
                 timestamp: getUTCTime(data.blockTimestamp),
                 listingResourceId: Number(data.data.listingResourceID),
                 blockHeight: data.blockHeight,

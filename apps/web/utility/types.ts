@@ -16,5 +16,7 @@ export interface MarketCollectionRow {
     volume: number;
     listings: number,
     count: number,
-    date_trunc: string
+    date_trunc: string;
+    volume_chg: number;
+    sales_chg: number;
 }

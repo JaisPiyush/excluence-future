@@ -157,7 +157,7 @@ export class EventScanner {
                 logger.error(err)
               }
 
-              logger.error(`Error fetching events ${this.eventType} (${startHeight} - ${endHeight}): ${err}`)
+              logger.error(`Error fetching events ${this.eventType} (${startHeight} - ${endHeight}): ${(err as Error).message}`)
               ++errors
               if (fetchSize > 1) {
                 // sometimes there are too many events in the response for the access nodes to handle, try to back off on our fetch size

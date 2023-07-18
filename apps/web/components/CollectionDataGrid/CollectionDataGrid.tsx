@@ -1,9 +1,18 @@
 import { MarketCollectionRow } from "@/utility/types"
 import { Avatar, Box, Typography } from "@mui/material";
 import { DataGrid, GridColDef, GridRenderCellParams, GridValueFormatterParams, GridValueGetterParams } from "@mui/x-data-grid"
+import FlowIcon from "../FlowIcon";
 
 interface CollectionDataGridProps {
     rows: MarketCollectionRow[]
+}
+
+const getChangeSign = (current: number, prev: number) => {
+    if (current && prev && prev > 0) {
+        const color = current > prev ? "green": "red";
+        return <Typography color={color}>{(current - prev) / prev}</Typography>
+    }
+    return <></>
 }
 
 const columns: GridColDef<MarketCollectionRow>[] = [
@@ -12,7 +21,7 @@ const columns: GridColDef<MarketCollectionRow>[] = [
         headerName: 'Collection', 
         minWidth: 150,
         flex: 1,
-        maxWidth: 500,
+        maxWidth: 600,
         valueGetter: (params: GridValueGetterParams<MarketCollectionRow>) => {
             return params.row.collectionId
         },
@@ -30,6 +39,8 @@ const columns: GridColDef<MarketCollectionRow>[] = [
         headerName: 'Avg. Price',
         maxWidth: 300,
         minWidth: 200,
+        align: 'center',
+        headerAlign: 'center',
         flex: 1,
         valueFormatter(params: GridValueFormatterParams<number>) {
             return params.value.toFixed(2)
@@ -41,8 +52,17 @@ const columns: GridColDef<MarketCollectionRow>[] = [
         headerName: 'Volume',
         maxWidth: 300,
         minWidth: 200,
+        align: 'center',
+        headerAlign: 'center',
         flex: 1,
-        disableColumnMenu: true
+        disableColumnMenu: true,
+        renderCell: (params: GridRenderCellParams<MarketCollectionRow>) => {
+
+            return <>
+                <Typography>{params.row.volume}<FlowIcon /> </Typography>
+                {getChangeSign(params.row.volume, params.row.volume_chg)}
+            </>
+        }
     },
     {
         field: 'count',
@@ -50,7 +70,9 @@ const columns: GridColDef<MarketCollectionRow>[] = [
         maxWidth: 300,
         minWidth: 200,
         flex: 1,
-        disableColumnMenu: true
+        disableColumnMenu: true,
+        align: 'center',
+        headerAlign: 'center',
     },
     {
         field: 'listings',
@@ -58,7 +80,9 @@ const columns: GridColDef<MarketCollectionRow>[] = [
         maxWidth: 300,
         minWidth: 200,
         flex: 1,
-        disableColumnMenu: true
+        disableColumnMenu: true,
+        align: 'center',
+        headerAlign: 'center',
     }
 ];
 
