@@ -77,6 +77,9 @@ export class IndexedCollectionNFTService {
         return await this.prisma.indexedCollectionNFT.findMany({
             where: {
                 collectionId: collectionId
+            },
+            select: {
+                nftID: true
             }
         })
     }
@@ -98,5 +101,29 @@ export class IndexedCollectionNFTService {
         })
     }
 
-   
+    async getOwnerHistoryOfNFT(collectionId: string, nftID: number) {
+        return await this.prisma.collectionNFTOwners.findMany({
+            where: {
+                collectionId,
+                nftID
+            },
+            orderBy: {
+                timestamp: 'desc'
+            }
+        })
+    }
+
+    async getTotalCollectionNFTCount(collectionId: string) {
+        return await this.prisma.indexedCollectionNFT.aggregate({
+            where: {
+                collectionId
+            },
+            _count: {
+                _all: true
+            }
+        })
+    }
+
+
+ 
 }

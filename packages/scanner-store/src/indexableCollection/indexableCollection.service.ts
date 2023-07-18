@@ -15,4 +15,28 @@ export class IndexableCollectionService {
     async findAll() {
         return await this.prisma.indexableCollection.findMany()
     }
+
+    async getAllNFTTraitsStats(collectionId: string) {
+        return await this.prisma.nFTTraitAndNFT.groupBy({
+            by:['traitName', 'traitValue'],
+            where: {
+                collectionId
+            },
+            _count: {
+                _all: true
+            },
+        })
+    }
+
+    async getTotalOwnersCountOfCollection(collectionId: string) {
+        return await this.prisma.collectionNFTOwners.groupBy({
+            by: ['nftID'],
+            where: {
+                collectionId
+            },
+            _count: {
+                _all: true
+            }
+        })
+    }
 }

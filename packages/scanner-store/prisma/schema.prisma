@@ -107,6 +107,7 @@ model IndexedCollectionNFT {
   @@id([collectionId, nftID])
 }
 
+// TODO: Add withrdrawn prop with timestamp
 model CollectionNFTOwners {
   id           Int                  @id @default(autoincrement())
   nft          IndexedCollectionNFT @relation(fields: [collectionId, nftID], references: [collectionId, nftID])

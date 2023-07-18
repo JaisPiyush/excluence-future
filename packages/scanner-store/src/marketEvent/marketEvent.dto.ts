@@ -52,8 +52,9 @@ export interface TrendingCollectionDto {
     listings: number | bigint | null;
     count: number | bigint | null;
     date_trunc: string;
-    volume_chg: number;
-    sales_chg: number;
+    volume_change: number | bigint;
+    sales_change: number | bigint;
+    collectionId: string;
 }
 
 export enum Durations {

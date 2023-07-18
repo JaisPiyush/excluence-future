@@ -67,27 +67,27 @@ export class MarketEventService {
         });
     }
 
-    async getTrendingCollectionData(): Promise<TrendingCollectionDto[]> {
+    async getTrendingCollectionData(period: string = "day"): Promise<TrendingCollectionDto[]> {
        try {
-            return await this.prisma.$queryRaw`SELECT "squareImage", "collectionName", n.*,
-                lag(n.volume,1, 0) OVER (PARTITION BY n."collectionId" ORDER BY n.date_trunc) as volume_chg,
-                lag(n.count,1, 0) OVER (PARTITION BY n."collectionId" ORDER BY n.date_trunc) as sales_chg
-                FROM "ListedCollectionMetadata"
-                LEFT JOIN
-                (
-                SELECT "MarketEvent"."collectionId", 
-                AVG(CASE WHEN "eventType" = 'Sale' THEN "salePrice" ELSE NULL END)/POWER(10,8) AS avgPrice, 
-                SUM(CASE WHEN "eventType" = 'Sale' THEN "salePrice" ELSE NULL END)/POWER(10,8) AS volume, 
-                COUNT(CASE WHEN "eventType" = 'Listing' THEN 1 ELSE NULL END ) as listings, 
-                COUNT(CASE WHEN "eventType" = 'Sale' THEN 1 ELSE NULL END), 
-                DATE_TRUNC('day', timestamp) as date_trunc
-                FROM "MarketEvent"
-                GROUP BY "MarketEvent"."collectionId", date_trunc
-                ) n
-                ON "ListedCollectionMetadata"."collectionId" = n."collectionId"
-                AND n.date_trunc >= current_date - interval '7' day
-                ORDER BY n.date_trunc DESC, n.volume
-                ;`;
+            return await this.prisma.$queryRawUnsafe(`SELECT "squareImage", "collectionName", n.*,
+            lag(n.volume,1, 0) OVER (PARTITION BY n."collectionId" ORDER BY n.date_trunc) as volume_change,
+            lag(n.count,1, 0) OVER (PARTITION BY n."collectionId" ORDER BY n.date_trunc) as sales_change
+            FROM "ListedCollectionMetadata"
+            INNER JOIN
+            (
+            SELECT "MarketEvent"."collectionId", 
+            AVG(CASE WHEN "eventType" = 'Sale' THEN "salePrice" ELSE NULL END)/POWER(10,8) AS avgPrice, 
+            SUM(CASE WHEN "eventType" = 'Sale' THEN "salePrice" ELSE NULL END)/POWER(10,8) AS volume, 
+            COUNT(CASE WHEN "eventType" = 'Listing' THEN 1 ELSE NULL END ) as listings, 
+            COUNT(CASE WHEN "eventType" = 'Sale' THEN 1 ELSE NULL END), 
+            DATE_TRUNC('${period}', timestamp) as date_trunc
+            FROM "MarketEvent"
+            GROUP BY "MarketEvent"."collectionId", date_trunc
+            ) n
+            ON "ListedCollectionMetadata"."collectionId" = n."collectionId"
+            AND n.date_trunc >= current_date - interval '1' ${period}
+            ORDER BY n.date_trunc DESC, n.volume
+            ;`);
             
        }catch(e) {
             console.log(e)
