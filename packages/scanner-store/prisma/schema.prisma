@@ -1,0 +1,138 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Store {
+  version          Int
+  // Complete address A.{address}.{contractName}
+  address          String  @id
+  storagePath      String
+  publicPath       String
+  startBlockHeight BigInt  @default(0)
+  isActive         Boolean @default(true)
+
+  MarketEvents MarketEvent[]
+  StoreEvents  StoreEvents[]
+}
+
+model StoreEvents {
+  store   Store  @relation(fields: [address], references: [address])
+  address String
+  event   String
+
+  @@id([address, event])
+}
+
+model ListedCollection {
+  // Complete address A.{address}.{contractName}
+  address String @id
+
+  MarketEvents             MarketEvent[]
+  ListedCollectionMetadata ListedCollectionMetadata[]
+}
+
+model ListedCollectionMetadata {
+  collection     ListedCollection @relation(fields: [collectionId], references: [address])
+  collectionId   String           @id
+  publicPath     String
+  privatePath    String
+  storagePath    String
+  contractName   String
+  collectionName String
+  bannerImage    String?
+  squareImage    String
+  description    String?
+  externalURL    String?
+  socials        Json
+}
+
+enum MarketEventType {
+  Listing
+  Sale
+  Delisted
+}
+
+model MarketEvent {
+  eventType            MarketEventType  @default(Listing)
+  collection           ListedCollection @relation(fields: [collectionId], references: [address])
+  collectionId         String
+  nftType              String
+  nftUUID              BigInt
+  nftID                BigInt
+  salePrice            BigInt           @default(0)
+  salePaymentVaultType String
+
+  // Store address for which event was emitted
+  store   Store  @relation(fields: [storeId], references: [address])
+  storeId String
+
+  expiry                 BigInt?
+  purchased              Boolean  @default(false)
+  isListingActiveForSale Boolean
+  storeFrontAddress      String?
+  nftBuyer               String?
+  nftSeller              String?
+  listingResourceId      BigInt
+  timestamp              DateTime
+  txnId                  String
+  blockHeight            BigInt   @default(0)
+
+  @@id([eventType, listingResourceId, collectionId, storeId])
+}
+
+model StoreScannerConfig {
+  scannerId   String @id
+  blockHeight String
+}
+
+model IndexableCollection {
+  address          String @id
+  startBlockHeight BigInt
+}
+
+model IndexedCollectionNFT {
+  collectionId        String
+  nftID               BigInt
+  CollectionNFTOwners CollectionNFTOwners[]
+  NFTTraitAndNFT      NFTTraitAndNFT[]
+
+  @@id([collectionId, nftID])
+}
+
+// TODO: Add withrdrawn prop with timestamp
+model CollectionNFTOwners {
+  id           Int                  @id @default(autoincrement())
+  nft          IndexedCollectionNFT @relation(fields: [collectionId, nftID], references: [collectionId, nftID])
+  collectionId String
+  nftID        BigInt
+  owner        String
+  timestamp DateTime @default(now())
+}
+
+model NFTTrait {
+  name           String
+  value          String
+
+  NFTTraitAndNFT NFTTraitAndNFT[]
+
+  @@id([name, value])
+}
+
+model NFTTraitAndNFT {
+  nft          IndexedCollectionNFT @relation(fields: [collectionId, nftID], references: [collectionId, nftID])
+  collectionId String
+  nftID        BigInt
+  trait        NFTTrait             @relation(fields: [traitName, traitValue], references: [name, value])
+  traitName String
+  traitValue String
+
+  @@id([collectionId, nftID, traitName, traitValue])
+}

@@ -1,0 +1,30 @@
+{
+  "name": "store-scanner",
+  "version": "1.0.0",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "author": "Piyush Jaiswal",
+  "license": "MIT",
+  "devDependencies": {
+    "tsconfig": "*"
+  },
+  "dependencies": {
+    "@bull-board/api": "^5.6.0",
+    "@bull-board/hapi": "^5.6.0",
+    "@hapi/hapi": "^21.3.2",
+    "@onflow/fcl": "^1.4.1",
+    "@rayvin-flow/flow-scanner-lib": "^1.0.1",
+    "class-transformer": "^0.5.1",
+    "logger": "*",
+    "scanner-store": "*",
+    "steward": "*",
+    "flow-scanner-lib": "*"
+  },
+  "scripts": {
+    "start": "ts-node src/index.ts",
+    "run:setup_account": "ts-node src/scripts/setup_stores.ts",
+    "run:get_job_count": "ts-node src/scripts/get_job_count.ts",
+    "run:server": "nodemon",
+    "nft-scanner": "ts-node src/scanner/nft_scanner.ts"
+  }
+}

@@ -2,16 +2,35 @@
   "private": true,
   "scripts": {
     "build": "turbo run build",
-    "dev": "turbo run dev",
+    "dev": "dotenv -- turbo run dev",
+    "dev:testnet": "dotenv -e .env.test -- turbo run dev",
     "lint": "turbo run lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "migrate:scanner-store": "dotenv -- yarn workspace scanner-store migrate",
+    "migrate:testnet_scanner-store": "dotenv -e .env.test -- yarn workspace scanner-store migrate",
+    "testnet_run:scanner-store": "dotenv -e .env.test -- yarn workspace scanner-store run",
+    "testnet:scanner-store": "dotenv -e .env.test -- yarn workspace scanner-store run test",
+    "start:scanner": "dotenv  -- yarn workspace store-scanner run start",
+    "start:nft_scanner": "dotenv  -- yarn workspace store-scanner run nft-scanner",
+    "dev:api": "dotenv -- turbo run dev --filter=api",
+    "start:testnet_scanner": "dotenv -e .env.test -- yarn workspace store-scanner run start",
+    "script": "dotenv -- yarn workspace",
+    "script:testnet": "dotenv -e .env.test -- yarn workspace"
   },
   "devDependencies": {
     "@turbo/gen": "^1.9.7",
+    "@types/hapi__hapi": "^21.0.0",
+    "@types/jest": "^29.5.2",
+    "dotenv": "^16.3.1",
+    "dotenv-cli": "^7.2.1",
     "eslint": "^7.32.0",
     "eslint-config-custom": "*",
+    "jest": "^29.6.1",
     "prettier": "^2.5.1",
-    "turbo": "latest"
+    "ts-node": "^10.9.1",
+    "tsc": "^2.0.4",
+    "turbo": "latest",
+    "typescript": "^5.1.6"
   },
   "name": "flow-future",
   "packageManager": "yarn@1.22.19",
